@@ -13,15 +13,14 @@
 typedef boost::shared_ptr<IScreenElement> ScreenElementPtr;
 typedef std::vector<ScreenElementPtr> ScreenElementList;
 
-class G_System : public IEventListener
+class G_System
 {
     public:
-        static G_System& getSingleton();
+        static G_System & getSingleton();
         ~G_System();
         bool setup();
         void render();
         void add(ScreenElementPtr const & obj);
-        bool handleEvent(Event const & event);
     private:
         G_System() {}
         G_System(G_System const&);

@@ -6,11 +6,16 @@ Event_System & Event_System::getSingleton()
     return ret;
 }
 
+Event_System::~Event_System()
+{
+    m_activeQueue = 0;
+}
+
 bool Event_System::validateType(EventType const & type) const
 {
     if(type.getStr() == NULL)
         return false;
-    if((type.getIdent() == 0) && (strcmp(type.getStr(), wildCardType) != 0))
+    if((type.getIdent() == 0) && (stricmp(type.getStr(), wildCardType) != 0))
         return false;
     EventTypeSet::const_iterator searchRes = m_typeList.find(type);
 
@@ -140,7 +145,10 @@ bool Event_System::trigger(Event const & event) const
     for(EventListenerTable::iterator it = eventTypeTable.begin(); it != eventTypeTable.end(); it++)
     {
         if((*it).get()->handleEvent(event))
+        {
             consumed = true;
+            break;
+        }
     }
     return consumed;
 }
@@ -190,5 +198,95 @@ bool Event_System::tick(uint32_t maxMillis)
     Milliseconds maxDuration(maxMillis);
     time_b stopTime = curSec + maxDuration;
 
+    EventListenerMap::const_iterator wcIt = m_registry.find(0);
 
+    uint32_t queueProcessing = m_activeQueue;
+    m_activeQueue = (m_activeQueue+1) % numQueues;
+
+    m_queue[m_activeQueue].clear();
+
+    while(!m_queue[queueProcessing].empty())
+    {
+        EventPtr curEvent = m_queue[queueProcessing].front();
+        m_queue[queueProcessing].pop_front();
+
+        EventType const & type = curEvent.get()->getType();
+
+        EventListenerMap::const_iterator typeIt = m_registry.find(type.getIdent());
+
+        if(wcIt != m_registry.end())
+        {
+            EventListenerTable wcTable = (*wcIt).second;
+            for(EventListenerTable::const_iterator it = wcTable.begin(); it != wcTable.end(); it++)
+            {
+                (*it).get()->handleEvent(*curEvent.get());
+            }
+        }
+        if(typeIt != m_registry.end())
+        {
+            EventListenerTable typeTable = (*typeIt).second;
+            for(EventListenerTable::const_iterator it = typeTable.begin(); it != typeTable.end(); it++)
+            {
+                if((*it).get()->handleEvent(*curEvent.get()))
+                    break;
+            }
+        }
+
+        if(maxMillis != infMill)
+        {
+            curSec = boost::chrono::steady_clock::now();
+            if(curSec >= stopTime)
+                break;
+        }
+    }
+    bool queueFlushed = m_queue[queueProcessing].empty();
+    if(!queueFlushed)
+    {
+        while(!m_queue[queueProcessing].empty())
+        {
+            EventPtr temp = m_queue[queueProcessing].back();
+            m_queue[queueProcessing].pop_back();
+            m_queue[m_activeQueue].push_front(temp);
+        }
+    }
+
+    return queueFlushed;
+}
+
+EventTypeList Event_System::getTypeList() const
+{
+    if(m_typeList.empty())
+        return EventTypeList();
+
+    EventTypeList res;
+    res.reserve(m_typeList.size());
+
+    for(EventTypeSet::iterator it = m_typeList.begin(); it != m_typeList.end(); it++)
+    {
+        res.push_back(*it);
+    }
+
+    return res;
+}
+
+EventListenerList Event_System::getListenerList(EventType const & type) const
+{
+    if(!validateType(type))
+        return EventListenerList();
+
+    EventListenerMap::const_iterator evmIt = m_registry.find(type.getIdent());
+
+    if(evmIt == m_registry.end())
+        return EventListenerList();
+
+    EventListenerTable elt = (*evmIt).second;
+
+    EventListenerList res;
+    res.reserve(elt.size());
+
+    for(EventListenerTable::iterator it = elt.begin(); it != elt.end(); it++)
+    {
+        res.push_back(*it);
+    }
+    return res;
 }

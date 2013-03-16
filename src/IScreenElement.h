@@ -7,6 +7,7 @@
 class IScreenElement
 {
     public:
+        explicit IScreenElement(Sint16 x, Sint16 y, std::string pictureName);
         virtual void render(SDL_Surface *renderTo);
         virtual void update();
     protected:

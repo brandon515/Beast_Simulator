@@ -4,12 +4,10 @@
 //              class EventType
 //---------------------------------------------
 
-EventType::EventType(const char * identStr):
+EventType::EventType(const char * const identStr):
     m_identStr(identStr),
     m_ident(getHash(identStr))
-{
-    //
-}
+    {}
 
 uint64_t EventType::getIdent() const
 {
@@ -37,7 +35,7 @@ void * EventType::getHash(const char * identStr)
 
     if(identStr == NULL)
         return NULL;
-    if(strcmp(identStr, wildCardType) == 0)
+    if(stricmp(identStr, wildCardType) == 0)
         return 0;
     uint64_t rA = CRC32(identStr, strlen(identStr));
     r = reinterpret_cast<void*>(rA);

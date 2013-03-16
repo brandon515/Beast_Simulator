@@ -1,6 +1,6 @@
 #include "G_System.h"
 
-G_System& G_System::getSingleton()
+G_System & G_System::getSingleton()
 {
     static G_System inst;
     return inst;
@@ -39,9 +39,4 @@ void G_System::render()
 void G_System::add(ScreenElementPtr const & obj)
 {
     renList.push_back(obj);
-}
-
-bool G_System::handleEvent(Event const & event)
-{
-    //
 }

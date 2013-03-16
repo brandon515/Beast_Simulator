@@ -8,8 +8,10 @@
 
 class IEventData
 {
-    virtual ~IEventData();
+    public:
+        virtual ~IEventData();
 };
+
 
 typedef boost::shared_ptr<IEventData> IEventDataPtr;
 typedef boost::chrono::duration<uint32_t, boost::milli> Milliseconds;
@@ -27,14 +29,14 @@ class EventType
         bool operator== (EventType const & o) const;
         static void * getHash(const char * identStr);
     private:
-        void * m_ident;
         const char * m_identStr;
+        void * m_ident;
 };
 
 class Event
 {
     public:
-        explicit Event(const char * type, time_b time = boost::chrono::steady_clock::now(), IEventDataPtr data = (IEventData*)NULL):
+        explicit Event(const char * type, time_b time = boost::chrono::steady_clock::now(), IEventDataPtr data = IEventDataPtr((IEventData*)NULL)):
             m_type(type),
             m_time(time),
             m_userData(data)
@@ -44,10 +46,10 @@ class Event
             m_time(o.m_time),
             m_userData(o.m_userData)
         {}
-        virtual ~Event();
+        virtual ~Event(){}
 
         EventType const & getType() const   {return m_type;}
-        time_b getTime() const               {return m_time;}
+        time_b getTime() const              {return m_time;}
         IEventDataPtr getData() const       {return m_userData;}
 
         template<typename _T>

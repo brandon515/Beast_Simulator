@@ -1,5 +1,11 @@
 #include "IScreenElement.h"
 
+IScreenElement::IScreenElement(Sint16 x, Sint16 y, std::string pictureName):
+    screenPos{x,y,0,0}
+{
+    loadSprite(pictureName);
+}
+
 bool IScreenElement::loadSprite(std::string filename)
 {
     sprite = loadImage(filename);

@@ -1,6 +1,6 @@
 #include "Methods.h"
 
-char* fileRead(string filename)
+const char* fileRead(string filename)
 {
     FILE* file;
     int len;

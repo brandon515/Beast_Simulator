@@ -11,7 +11,7 @@
 #include <iostream>
 using namespace std;
 
-char* fileRead(string filename);
+const char* fileRead(string filename);
 string getSection(string name, string dat);
 int count(string data, string ch);
 int getNumber(string dat,string name);

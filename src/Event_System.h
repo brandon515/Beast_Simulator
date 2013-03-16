@@ -28,6 +28,7 @@ class Event_System
 {
     public:
         static Event_System & getSingleton();
+        ~Event_System();
         bool addListener(EventListenerPtr const & listener, EventType const & type);
         bool delListener(EventListenerPtr const & listener, EventType const & type);
         bool trigger(Event const & event) const;
@@ -36,7 +37,7 @@ class Event_System
         bool tick(uint32_t maxMillis);
         bool validateType(EventType const & type) const;
         EventTypeList getTypeList() const;
-
+        EventListenerList getListenerList(EventType const & type) const;
     private:
 
         //singleton undefined methods
