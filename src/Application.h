@@ -5,7 +5,8 @@
 #include "G_System.h"
 #include "Event_System.h"
 #include "SDL_EventManager.h"
-#include "SDL_Events.h"
+#include "Logging.h"
+#include "GameEvents.h"
 #include <SDL\SDL.h>
 #include <SDL\SDL_ttf.h>
 class Application : public IEventListener
@@ -16,7 +17,8 @@ class Application : public IEventListener
         void go();
         bool handleEvent(Event const & event);
     private:
-        SDL_EventManager mang;
+        Logging m_log;
+        SDL_EventManager m_appLayerEvents;
         bool setup();
         bool playing;
 };

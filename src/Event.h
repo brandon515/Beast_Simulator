@@ -9,7 +9,7 @@
 class IEventData
 {
     public:
-        virtual ~IEventData();
+        virtual ~IEventData(){}
 };
 
 
@@ -22,7 +22,7 @@ const char * const wildCardType = "*";
 class EventType
 {
     public:
-        explicit EventType(const char * const identStr);
+        explicit EventType(const char * identStr);
         uint64_t getIdent() const;
         const char * getStr() const;
         bool operator< (EventType const & o) const;
@@ -36,7 +36,7 @@ class EventType
 class Event
 {
     public:
-        explicit Event(const char * type, time_b time = boost::chrono::steady_clock::now(), IEventDataPtr data = IEventDataPtr((IEventData*)NULL)):
+        explicit Event(const char * type, IEventDataPtr data = IEventDataPtr((IEventData*)NULL), time_b time = boost::chrono::steady_clock::now()):
             m_type(type),
             m_time(time),
             m_userData(data)

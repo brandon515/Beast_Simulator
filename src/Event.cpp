@@ -4,7 +4,7 @@
 //              class EventType
 //---------------------------------------------
 
-EventType::EventType(const char * const identStr):
+EventType::EventType(const char * identStr):
     m_identStr(identStr),
     m_ident(getHash(identStr))
     {}

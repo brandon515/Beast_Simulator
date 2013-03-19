@@ -55,15 +55,19 @@ int count(string data, string ch)
     return count;
 }
 
-int getNumber(string dat, string name)
+Sint32 getNumber(string dat, string name)
 {
     string::size_type pos, pos2, pos3;
     string num;
     pos = dat.find(name.c_str());
     if(pos == string::npos)
-        return -1;
+        return LONG_MAX;
     pos2 = dat.find('=', pos);
+    if(pos2 == string::npos)
+        return LONG_MAX;
     pos3 = dat.find(';',pos);
+    if(pos3 == string::npos)
+        return LONG_MAX;
     if(pos3-pos2>1)
         num = dat.substr(pos2+1,(pos3-(pos2+1)));
     else
@@ -77,9 +81,13 @@ string getString(string dat, string name)
     string num;
     pos = dat.find(name.c_str());
     if(pos == string::npos)
-        return NULL;
+        return "nope";
     pos2 = dat.find('=', pos);
+    if(pos2 == string::npos)
+        return "nope";
     pos3 = dat.find(';',pos);
+    if(pos3 == string::npos)
+        return "nope";
     if(pos3-pos2>1)
         num = dat.substr(pos2+1,(pos3-(pos2+1)));
     else

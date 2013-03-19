@@ -36,3 +36,9 @@ void IScreenElement::render(SDL_Surface *renderTo)
             SDL_BlitSurface(sprite, &sheetPos, renderTo, &screenPos);
     }
 }
+
+void IScreenElement::move(Sint16 x, Sint16 y)
+{
+    screenPos.x+=x;
+    screenPos.y+=y;
+}

@@ -17,9 +17,9 @@ void Application::go()
         playing = true;
         while(playing == true)
         {
-            mang.tick();
+            m_appLayerEvents.tick();
             if(!Event_System::getSingleton().tick(infMill))
-                cerr << "placeholder";//Logging::getSingleton().log("event system not able to flush the queue, consider increasing the time");
+                m_log.log("event system not able to flush the queue, consider increasing the time");
             G_System::getSingleton().render();
         }
     }
@@ -27,24 +27,26 @@ void Application::go()
 
 bool Application::setup()
 {
-    //TODO create logging class and replace cerr
     if(SDL_Init(SDL_INIT_EVERYTHING)==-1 || TTF_Init() == -1)
     {
-        cerr << "sdl failed";
+        m_log.log("SDL failed to setup");
         return false;
     }
+    m_log.log("SDL and TTF sub-system successfully started");
     if(!G_System::getSingleton().setup())
     {
-        cerr << "graphics system failed";
+        m_log.log("graphics system failed");
         return false;
     }
+    m_log.log("Graphics system successfully started");
     IEventListener *thisPtr = this;
     EventListenerPtr safeThisPtr(thisPtr);
     if(!Event_System::getSingleton().addListener(safeThisPtr, Evt_Quit().getType()))
     {
-        cerr << "application not added to listener list";
+        m_log.log("application not added to listener list");
         return false;
     }
+    m_log.log("Event System successfully started and application added to listeners list");
     return true;
 }
 
@@ -54,5 +56,7 @@ bool Application::handleEvent(Event const & event)
     if(type.getIdent() == Evt_Quit().getType().getIdent())
     {
         playing = false;
+        return true;
     }
+    return false;
 }

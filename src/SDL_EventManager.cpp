@@ -6,9 +6,8 @@ void SDL_EventManager::tick()
     {
         if(event.type == SDL_QUIT)
         {
-            Evt_Quit *sdlEvent;
-            EventPtr msg(sdlEvent);
-            Event_System::getSingleton().queueEvent(msg);
+            m_log.log("SDL_Quit event realized, shutting down");
+            Event_System::getSingleton().queueEvent(EventPtr(new Evt_Quit()));
         }
     }
 }

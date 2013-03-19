@@ -2,7 +2,8 @@
 #define SDL_EVENTMANAGER_H_INCLUDED
 #include <SDl\SDL.h>
 #include "Event_System.h"
-#include "SDL_Events.h"
+#include "Logging.h"
+#include "GameEvents.h"
 
 class SDL_EventManager
 {
@@ -10,6 +11,7 @@ class SDL_EventManager
         void tick();
     private:
         SDL_Event event;
+        Logging m_log;
 };
 
 #endif // SDL_EVENTMANAGER_H_INCLUDED
