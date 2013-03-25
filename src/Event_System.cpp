@@ -6,10 +6,10 @@ Event_System & Event_System::getSingleton()
     return ret;
 }
 
-Event_System::~Event_System()
+/*Event_System::~Event_System()
 {
     m_activeQueue = 0;
-}
+}*/
 
 bool Event_System::validateType(EventType const & type) const
 {

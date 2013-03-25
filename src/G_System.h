@@ -27,6 +27,7 @@ class G_System : public IEventListener
         void render();
         uint32_t add(ScreenElementPtr const & obj);
         bool handleEvent(Event const & event);
+        const ScreenElementList getRenderList() const;
     private:
 
         //singleton uninitialized functions

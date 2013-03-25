@@ -17,7 +17,7 @@ class Logging
         Logging();
         ~Logging();
     private:
-        ofstream file;
+        fstream file;
 };
 
 #endif // LOGGING_H_INCLUDED

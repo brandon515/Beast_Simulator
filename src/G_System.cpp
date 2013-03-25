@@ -13,10 +13,16 @@ G_System::~G_System()
 
 bool G_System::setup()
 {
+    if(SDL_Init(SDL_INIT_EVERYTHING)==-1 || TTF_Init() == -1)
+    {
+        m_log.log(SDL_GetError());
+        return false;
+    }
+    m_log.log("SDL and TTF sub-system successfully started");
     m_height = getNumber(g_config, "height");
     if(m_height == LONG_MAX)
     {
-        m_log.log("height not in config file, setting to default:: 600");
+        m_log.log("height not in config file, setting to default: 600");
         m_height = 600;
     }
     m_width = getNumber(g_config, "width");
@@ -48,6 +54,7 @@ bool G_System::setup()
         m_log.log("graphics system not hooked into Event System");
         return false;
     }
+    m_log.log("graphics system added to Event_System");
     SDL_WM_SetCaption(m_windowCaption.c_str(), NULL);
     return true;
 }
@@ -59,6 +66,7 @@ void G_System::render()
         (*it).second.get()->update();
         (*it).second.get()->render(screen);
     }
+    SDL_Flip(screen);
 }
 
 uint32_t G_System::add(ScreenElementPtr const & obj)
@@ -98,4 +106,9 @@ uint32_t G_System::getNextId()
 {
     m_curID++;
     return m_curID;
+}
+
+const ScreenElementList G_System::getRenderList() const
+{
+    return renList;
 }

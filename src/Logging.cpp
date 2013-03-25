@@ -2,7 +2,7 @@
 
 Logging::Logging()
 {
-    file.open(getString(g_config, "logFile").c_str());
+    file.open(getString(g_config, "logFile").c_str(), std::ios::app|std::ios::out);
 }
 
 Logging::~Logging()
@@ -12,11 +12,11 @@ Logging::~Logging()
 
 void Logging::log(std::string msg)
 {
-    static Logging inst;
-    if(!inst.file)
+    //static Logging inst;
+    if(!file)
     {
-        inst.file.open(getString(g_config, "logFile").c_str());
-        if(!inst.file)
+        file.open(getString(g_config, "logFile").c_str());
+        if(!file)
         {
             Event_System::getSingleton().queueEvent(EventPtr(new Evt_Quit()));
             cerr << "logging system is stupid!";
@@ -35,6 +35,6 @@ void Logging::log(std::string msg)
     const char *timeStrN = ctime(&tTime);
     strncpy(timeStr, timeStrN, strlen(timeStrN)-1);*/
 
-    inst.file << msg2.str() << msg;
-    std::endl(inst.file);
+    file << msg2.str() << msg;
+    std::endl(file);
 }

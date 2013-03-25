@@ -4,6 +4,7 @@
 #include <boost\chrono.hpp>
 #include "IEventListener.h"
 #include "Event.h"
+#include "Logging.h"
 #include <cassert>
 #include <set>
 #include <vector>
@@ -28,7 +29,7 @@ class Event_System
 {
     public:
         static Event_System & getSingleton();
-        ~Event_System();
+        //~Event_System();
         bool addListener(EventListenerPtr const & listener, EventType const & type);
         bool delListener(EventListenerPtr const & listener, EventType const & type);
         bool trigger(Event const & event) const;

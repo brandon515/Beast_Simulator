@@ -3,6 +3,7 @@
 #include "Event_System.h"
 #include "IEventListener.h"
 #include "Logging.h"
+#include <boost\lexical_cast.hpp>
 
 class EventLogger: public IEventListener
 {

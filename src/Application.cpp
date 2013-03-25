@@ -19,7 +19,7 @@ void Application::go()
         {
             m_appLayerEvents.tick();
             if(!Event_System::getSingleton().tick(infMill))
-                m_log.log("event system not able to flush the queue, consider increasing the time");
+                m_log.log("event system cant keep up!");
             G_System::getSingleton().render();
         }
     }
@@ -27,12 +27,9 @@ void Application::go()
 
 bool Application::setup()
 {
-    if(SDL_Init(SDL_INIT_EVERYTHING)==-1 || TTF_Init() == -1)
-    {
-        m_log.log("SDL failed to setup");
-        return false;
-    }
-    m_log.log("SDL and TTF sub-system successfully started");
+    fstream file;
+    file.open(getString(g_config, "logFile").c_str(), std::ios::trunc|std::ios::out);
+    file.close();
     if(!G_System::getSingleton().setup())
     {
         m_log.log("graphics system failed");
@@ -47,13 +44,14 @@ bool Application::setup()
         return false;
     }
     m_log.log("Event System successfully started and application added to listeners list");
+    //G_System::getSingleton().add(ScreenElementPtr(new Planet(200,200, 100, 0xffffff)));
     return true;
 }
 
 bool Application::handleEvent(Event const & event)
 {
     EventType type = event.getType();
-    if(type.getIdent() == Evt_Quit().getType().getIdent())
+    if(type == Evt_Quit().getType())
     {
         playing = false;
         return true;

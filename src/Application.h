@@ -7,8 +7,8 @@
 #include "SDL_EventManager.h"
 #include "Logging.h"
 #include "GameEvents.h"
-#include <SDL\SDL.h>
-#include <SDL\SDL_ttf.h>
+#include "Planet.h"
+#include "EventLogger.h"
 class Application : public IEventListener
 {
     public:
@@ -19,6 +19,7 @@ class Application : public IEventListener
     private:
         Logging m_log;
         SDL_EventManager m_appLayerEvents;
+        EventLogger log;
         bool setup();
         bool playing;
 };
