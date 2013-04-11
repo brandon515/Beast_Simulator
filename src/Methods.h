@@ -29,6 +29,6 @@ Uint32 LCM(int f, int s);
 void halt(float);
 Uint64 getBit(Uint32 pos);
 Uint64 getBitRange(Uint32 beg, Uint32 end);
-uint64_t CRC32(const char *buf, unsigned long len);
+uint32_t CRC32(const char *buf, unsigned long len);
 
 #endif // METHODS_H_INCLUDED

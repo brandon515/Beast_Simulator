@@ -44,7 +44,7 @@ bool Application::setup()
         return false;
     }
     m_log.log("Event System successfully started and application added to listeners list");
-    //G_System::getSingleton().add(ScreenElementPtr(new Planet(200,200, 100, 0xffffff)));
+    //G_System::getSingleton().add(ScreenElementPtr(new Field(4000,4000,5,15,1994)));
     return true;
 }
 

@@ -9,14 +9,15 @@ IScreenElement::IScreenElement(Sint16 x, Sint16 y, std::string pictureName)
 {
     screenPos.x = x;
     screenPos.y = y;
+    sheetPos.w = 0;
     //let the derived class initalize the sprite in it's own way if they so choose
-    if(pictureName.compare("did not init") != 0)
+    if(pictureName.compare("n") != 0)
         loadSprite(pictureName);
 }
 
-void IScreenElement::update()
+bool IScreenElement::setup()
 {
-    //
+    return true;
 }
 
 bool IScreenElement::loadSprite(std::string filename)
@@ -45,16 +46,16 @@ void IScreenElement::render(SDL_Surface *renderTo)
     }
 }
 
-void IScreenElement::setAcc(Sint16 x, Sint16 y)
-{
-    velocity.x=x;
-    velocity.y=y;
-}
-
 void IScreenElement::move(Sint16 x, Sint16 y)
 {
     screenPos.x+=x;
     screenPos.y+=y;
+}
+
+void IScreenElement::setVec(Sint16 x, Sint16 y)
+{
+    velocity.x = x;
+    velocity.y = y;
 }
 
 const SDL_Rect IScreenElement::getPos() const

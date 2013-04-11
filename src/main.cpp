@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
                     SDL_BlitSurface(water, NULL, field, &pos);
                 }
                 pos.x+=20;
-            }
+            }*128+128
             pos.y+=20;
 
             pos.x=0;

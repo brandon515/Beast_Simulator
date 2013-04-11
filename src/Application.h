@@ -6,8 +6,8 @@
 #include "Event_System.h"
 #include "SDL_EventManager.h"
 #include "Logging.h"
+#include "GameObjects.h"
 #include "GameEvents.h"
-#include "Planet.h"
 #include "EventLogger.h"
 class Application : public IEventListener
 {

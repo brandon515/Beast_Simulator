@@ -265,10 +265,10 @@ Uint64 getBitRange(Uint32 beg, Uint32 end)
     return total;
 }
 
-uint64_t CRC32(const char *buf, unsigned long len)
+uint32_t CRC32(const char *buf, unsigned long len)
 {
-    uint64_t crc_table[256];
-    uint64_t crc;
+    uint32_t crc_table[256];
+    uint32_t crc;
     for (int i = 0; i < 256; i++) {
         crc = i;
         for (int j = 0; j < 8; j++) {

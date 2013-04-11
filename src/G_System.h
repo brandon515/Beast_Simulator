@@ -9,14 +9,12 @@
 #include "Logging.h"
 #include "GameEvents.h"
 #include <climits>
-#include <map>
+#include <vector>
 #include <boost\shared_ptr.hpp>
 #include <boost\lexical_cast.hpp>
 
 typedef boost::shared_ptr<IScreenElement> ScreenElementPtr;
 typedef std::map<uint32_t, ScreenElementPtr> ScreenElementList;
-typedef std::pair<uint32_t, ScreenElementPtr> ScreenElementEnt;
-typedef std::pair<ScreenElementList::iterator, bool> ScreenElementRes;
 
 class G_System : public IEventListener
 {
@@ -25,28 +23,22 @@ class G_System : public IEventListener
         ~G_System();
         bool setup();
         void render();
-        uint32_t add(ScreenElementPtr const & obj);
         bool handleEvent(Event const & event);
-        const ScreenElementList getRenderList() const;
     private:
 
         //singleton uninitialized functions
 
-        G_System():m_curID(0) {}
+        G_System() {}
         G_System(G_System const&);
         void operator=(G_System const&);
 
         //neccessary member functions and variables
 
         SDL_Surface *screen;
-        uint32_t m_height, m_width, m_bitRate, m_curID;
+        uint32_t m_height, m_width, m_bitRate;
         std::string m_windowCaption;
         ScreenElementList renList;
         Logging m_log;
-
-        //ID aquisition
-
-        uint32_t getNextId();
 };
 
 #endif // G_SYSTEM_H_INCLUDED

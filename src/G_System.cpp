@@ -40,7 +40,7 @@ bool G_System::setup()
     m_windowCaption = getString(g_config, "title");
     if(m_windowCaption.compare("nope") == 0)
     {
-        m_log.log("window caption not in config file, setting to default");
+        m_log.log("window caption not in config file, setting to default: New Game");
         m_windowCaption = "New Game";
     }
     screen = SDL_SetVideoMode(m_width, m_height, m_bitRate, SDL_SWSURFACE);
@@ -63,24 +63,9 @@ void G_System::render()
 {
     for(ScreenElementList::iterator it = renList.begin(); it != renList.end(); it++)
     {
-        (*it).second.get()->update();
         (*it).second.get()->render(screen);
     }
     SDL_Flip(screen);
-}
-
-uint32_t G_System::add(ScreenElementPtr const & obj)
-{
-    if(obj.get() == NULL)
-        return 0;
-    uint32_t ID = getNextId();
-    ScreenElementEnt ent(ID, obj);
-    ScreenElementRes res = renList.insert(ent);
-    if(res.first == renList.end())
-        return 0;
-    else if(!res.second)
-        return 0;
-    return ID;
 }
 
 bool G_System::handleEvent(Event const & event)
@@ -100,15 +85,4 @@ bool G_System::handleEvent(Event const & event)
         return true;
     }
     return false;
-}
-
-uint32_t G_System::getNextId()
-{
-    m_curID++;
-    return m_curID;
-}
-
-const ScreenElementList G_System::getRenderList() const
-{
-    return renList;
 }
