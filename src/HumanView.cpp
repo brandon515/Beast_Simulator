@@ -7,8 +7,6 @@ HumanView::HumanView()
     offset.y = 0;
     vec.x = 0;
     vec.y = 0;
-    //HumanViewPtr viewPtr(this);
-    //ViewSystem::getSingleton().addView(viewPtr);
     keys.clear();
 }
 

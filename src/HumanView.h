@@ -28,6 +28,8 @@ enum VirtualKeys
     VK_MAPDOWN
 };
 
+//Purpose: To handle all human interaction with the system. it's only interaction with the system must be firing events and reciving events
+
 class HumanView : public IGameView, public IEventListener
 {
     public:
