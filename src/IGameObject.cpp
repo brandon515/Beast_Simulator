@@ -1,5 +1,15 @@
 #include "IGameObject.h"
 
+IGameObject::IGameObject()
+{
+    //
+}
+
+IGameObject::~IGameObject()
+{
+    //
+}
+
 bool IGameObject::reg(std::string hashStr)
 {
     uint32_t hashVal = CRC32(hashStr.c_str(), hashStr.length());

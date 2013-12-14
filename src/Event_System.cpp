@@ -6,10 +6,12 @@ Event_System & Event_System::getSingleton()
     return ret;
 }
 
-/*Event_System::~Event_System()
+Event_System::~Event_System()
 {
+    m_registry.clear();
+    m_typeList.clear();
     m_activeQueue = 0;
-}*/
+}
 
 bool Event_System::validateType(EventType const & type) const
 {
@@ -227,7 +229,7 @@ bool Event_System::tick(uint32_t maxMillis)
             EventListenerTable typeTable = (*typeIt).second;
             for(EventListenerTable::const_iterator it = typeTable.begin(); it != typeTable.end(); it++)
             {
-                if((*it).get()->handleEvent(*curEvent.get()))
+                if((*it).get()->handleEvent(*(curEvent.get())))
                     break;
             }
         }

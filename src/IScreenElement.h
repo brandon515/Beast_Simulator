@@ -2,23 +2,23 @@
 #define ISCREENELEMENT_H_INCLUDED
 #include <string>
 #include <SDL\SDL.h>
+#include <boost\shared_ptr.hpp>
 #include "Methods.h"
 #include "IGameObject.h"
 
-class IScreenElement : public IGameObject
+class IScreenElement : public virtual IGameObject
 {
     public:
-        explicit IScreenElement(Sint16 x, Sint16 y, std::string pictureName = "n");
-        virtual ~IScreenElement();
-        virtual void render(SDL_Surface *renderTo);
-        virtual bool setup();
-        virtual const SDL_Rect getPos() const;
-        virtual void setVec(Sint16 x, Sint16 y);
-        virtual void move(Sint16 x, Sint16 y);
-    protected:
-        virtual bool loadSprite(std::string filename);
-        SDL_Rect screenPos, sheetPos, velocity;
+        IScreenElement(){visible = true; reg("IScreenElement");}
+        virtual ~IScreenElement(){}
+        virtual void render(SDL_Surface *renderTo)=0;
+        bool isVisible(){return visible;}
+        void setVisibility(bool vis){visible = vis;}
         SDL_Surface *sprite;
+    private:
+        bool visible;
 };
+
+typedef boost::shared_ptr<IScreenElement> IScreenElementPtr;
 
 #endif // ISCREENELEMENT_H_INCLUDED

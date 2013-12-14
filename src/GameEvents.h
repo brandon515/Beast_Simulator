@@ -35,4 +35,72 @@ class Evt_Move : public Event
 
 };
 
+class Evt_KeyboardData : public IEventData
+{
+    public:
+        Evt_KeyboardData(bool pkeyDown, uint32_t pkey):
+            keyDown(pkeyDown),
+            key(pkey)
+        {}
+        bool keyDown;
+        uint32_t key;
+};
+
+class Evt_Keyboard : public Event
+{
+    public:
+        explicit Evt_Keyboard(bool keyDown, uint32_t key):
+            Event("Keyboard", IEventDataPtr( new Evt_KeyboardData(keyDown, key) ))
+        {}
+        explicit Evt_Keyboard():
+            Event("Keyboard")
+        {}
+};
+
+class Evt_MouseMoveData : public IEventData
+{
+    public:
+        Evt_MouseMoveData(Sint16 px, Sint16 py):
+            x(px),
+            y(py)
+        {}
+        Sint16 x, y;
+};
+
+class Evt_MouseMove : public Event
+{
+    public:
+        explicit Evt_MouseMove(Sint16 x, Sint16 y):
+            Event("MouseMoved", IEventDataPtr(new Evt_MouseMoveData(x,y)))
+        {}
+        explicit Evt_MouseMove():
+            Event("MouseMoved")
+        {}
+};
+
+class Evt_MouseButtonData : public IEventData
+{
+    public:
+        Evt_MouseButtonData(bool pbuttonDown, uint8_t pbutton, uint16_t px, uint16_t py):
+            buttonDown(pbuttonDown),
+            button(pbutton),
+            x(px),
+            y(py)
+        {}
+        bool buttonDown;
+        uint8_t button;
+        uint16_t x, y;
+};
+
+class Evt_MouseButton : public Event
+{
+    public:
+        Evt_MouseButton(bool buttonDown, uint8_t button, uint16_t x, uint16_t y):
+            Event("MouseButton", IEventDataPtr(new Evt_MouseButtonData(buttonDown, button, x, y)))
+        {}
+        Evt_MouseButton():
+            Event("MouseButton")
+        {}
+};
+
 #endif // GAMEEVENTS_H_INCLUDED

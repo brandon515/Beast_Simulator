@@ -9,7 +9,7 @@ class EventLogger: public IEventListener
 {
     public:
         EventLogger();
-        ~EventLogger(){}
+        ~EventLogger();
         bool handleEvent(Event const &event);
     private:
         Logging m_log;
