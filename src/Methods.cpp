@@ -95,7 +95,7 @@ string getString(string dat, string name)
     return num;
 }
 
-SDL_Surface* loadImage(string file)
+/*SDL_Surface* loadImage(string file)
 {
     SDL_Surface* temp = NULL;
     SDL_Surface* opt = NULL;
@@ -120,7 +120,7 @@ SDL_Surface* loadImage(string file)
         cerr << "image format change for " << file << " failed\n";
     }
     return opt;
-}
+}*/
 Uint32 LCM(int f, int s)
 {
     for(int i = 1; i <= s; i++)

@@ -3,17 +3,11 @@
 
 HumanView::HumanView()
 {
-    offset.x = 0;
-    offset.y = 0;
-    vec.x = 0;
-    vec.y = 0;
-    keys.clear();
 }
 
 HumanView::~HumanView()
 {
     Logging().log("human view destroyed");
-    SDL_FreeSurface(screen);
 }
 
 bool HumanView::init()
@@ -23,7 +17,7 @@ bool HumanView::init()
 
     //SDL and Screen initalization
 
-    if(SDL_Init(SDL_INIT_EVERYTHING)==-1 || TTF_Init() == -1)
+    /*if(SDL_Init(SDL_INIT_EVERYTHING)==-1 || TTF_Init() == -1)
     {
         Logging().log(SDL_GetError());
         return false;
@@ -74,40 +68,7 @@ bool HumanView::init()
     {
         Logging().log("screen failed to inialize");
         return false;
-    }
-
-    //loading Keyboard settings
-
-    std::ifstream file("bindings");
-    boost::archive::binary_iarchive arch(file);
-
-    arch & keys;
-    file.close();
-
-    /*keys.insert(VirtualKeyboardEnt(SDLK_ESCAPE, VK_EXIT));
-    keys.insert(VirtualKeyboardEnt(SDLK_UP, VK_MAPUP));
-    keys.insert(VirtualKeyboardEnt(SDLK_DOWN, VK_MAPDOWN));
-    keys.insert(VirtualKeyboardEnt(SDLK_LEFT, VK_MAPLEFT));
-    keys.insert(VirtualKeyboardEnt(SDLK_RIGHT, VK_MAPRIGHT));
-    std::ofstream file2("bindings");
-    boost::archive::binary_oarchive arch2(file2);
-    arch2 & keys;
-    file2.close();*/
-
-    renderableObjects = World::getSingleton().GetScreenList();
-    mapSur.init();
-
-    // adding myself to the event system
-
-    /*IEventListener *evtDataPtr = this;
-    EventListenerPtr evtListen(evtDataPtr);
-
-    if(!Event_System::getSingleton().addListener(evtListen, Evt_Keyboard().getType()) || !Event_System::getSingleton().addListener(evtListen, Evt_Quit().getType()))
-    {
-        Logging().log("Human View not hooked into Event System");
-        return false;
-    }
-    Logging().log("Human View added to Event_System");*/
+    }*/
 
     Logging().log("Human View created");
     return true;
@@ -115,56 +76,6 @@ bool HumanView::init()
 
 void HumanView::tick()
 {
-    for(IScreenElementMap::iterator it = renderableObjects->begin(); it != renderableObjects->end(); it++)
-    {
-        it->get()->render(mapSur.getBufMap());
-    }
-    mapSur.update();
-    mapSur.render();
-    SDL_Flip(screen);
-    while(SDL_PollEvent(&event))
-    {
-        if(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
-        {
-            handleKeyboard(event.key.keysym.sym, event.type == SDL_KEYDOWN);
-        }
-        else if(event.type == SDL_QUIT)
-        {
-            /*IEventListener *datE = this;
-            EventListenerPtr datEPtr(datE);
-            Event_System::getSingleton().delListener(datEPtr, EventType(wildCardType));*/
-            //ViewSystem::getSingleton().delView(this);
-            needsDelete = true;
-        }
-    }
-}
-
-void HumanView::handleKeyboard(SDLKey key, bool keyDown)
-{
-    VirtualKeyboard::iterator ret = keys.find(key);
-    if(ret != keys.end())
-    {
-        switch((*ret).second)
-        {
-            case VK_EXIT:
-                needsDelete = true;
-                break;
-            case VK_MAPRIGHT:
-                keyDown ? mapSur.addVecX(-20) : mapSur.addVecX(20);
-                break;
-            case VK_MAPLEFT:
-                keyDown ? mapSur.addVecX(20) : mapSur.addVecX(-20);
-                break;
-            case VK_MAPUP:
-                keyDown ? mapSur.addVecY(20) : mapSur.addVecY(-20);
-                break;
-            case VK_MAPDOWN:
-                keyDown ? mapSur.addVecY(-20) : mapSur.addVecY(20);
-                break;
-            default:
-                break;
-        }
-    }
 }
 
 bool HumanView::handleEvent(Event const &event)

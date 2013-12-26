@@ -7,8 +7,6 @@
 #include <ctime>
 #include <string>
 #include <climits>
-#include <SDL/SDL.h>
-#include <SDL/SDL_Image.h>
 #include <iostream>
 using namespace std;
 
@@ -17,7 +15,7 @@ string getSection(string name, string dat);
 int count(string data, string ch);
 Sint32 getNumber(string dat,string name);
 string getString(string dat,string name);
-SDL_Surface* loadImage(string);
+//SDL_Surface* loadImage(string);
 double smoothNoise(int x, int y, int prime1, int prime2, int prime3);
 double noise(int x, int y, int prime1, int prime2, int prime3);
 double interpolate(double a, double b, double x);
