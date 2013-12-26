@@ -1,0 +1,5 @@
+Purpose: To generalize hardware input from the user 
+
+Functions:
+    vector<event> getInput
+        returns a list of events from GameEvents.h
