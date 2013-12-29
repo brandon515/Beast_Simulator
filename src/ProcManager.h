@@ -40,4 +40,7 @@ class Process
         explicit Process(std::string sName){name = CRC32(sName);}
         virtual void tick();
         uint32_t name;
+        bool doKill(){return kill;}
+    private:
+        bool kill;
 };
