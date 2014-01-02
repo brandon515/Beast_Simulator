@@ -5,17 +5,18 @@
 #include <boost/shared_ptr.hpp>
 #include "Event_System.h"
 
-class Process;
-typedef boost::shared_ptr<Process> ProcessPtr;
 
 class ProcManager
 {
     public:
         
         bool addProcess(ProcessPtr obj, std::string group = "NONE");
-        void pauseProcess(std::string name);
-        void pauseAllProcesses();
-        void pauseGroup(std::string groupName);
+        bool pauseProcess(std::string name);
+        bool pauseAllProcesses();
+        bool pauseGroup(std::string groupName);
+        bool detachProcess(std::string name);
+        bool resumeGroup(std::string groupName);
+        bool resumeProcess(std::string name);
         void tick();
         
     private:
@@ -31,16 +32,4 @@ class ProcManager
 
         ProcessMap processes;
         GroupMap groups;
-};
-
-
-class Process
-{
-    public:
-        explicit Process(std::string sName){name = CRC32(sName);}
-        virtual void tick();
-        uint32_t name;
-        bool doKill(){return kill;}
-    private:
-        bool kill;
 };
