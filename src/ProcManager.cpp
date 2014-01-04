@@ -2,6 +2,7 @@
 
 bool ProcManager::addProcess(ProcessPtr obj, std::string group = "NONE")
 {
+    //Check ProcessMap to see if obj already exists
     uint32_t hashGroup = CRC32(group.c_str(), group.length());
     for(ProcessMap::iterator tempIt = processes.begin(); tempIt != processes.end(); tempIt++)
     {
@@ -15,9 +16,11 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group = "NONE")
             }
         }
     }
+    //If it doesnt yet exist in the system, add it
     ProcessMap::iterator it = processes.find(hashGroup);
     if(it == std::map::end)
     {
+        //it's being added to a group that doesnt exist yet so we create a new group and add it to the ProcessMap
         ProcessEnt ent(hashGroup, ProcessList());
         ProcessRes res = processes.insert(ent);
         if(res->first && res->second != std::map::end)
@@ -27,6 +30,7 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group = "NONE")
             Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("New Group was not created for " + group)));
             return false;
         }
+        //add the group to the boolean map
         GroupEnt gEnt(hashGroup, true);
         GroupRes gRes = groups.insert(gEnt);
         if(res->first == false || res->second == std::map::end)
@@ -37,6 +41,7 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group = "NONE")
         }
         it = res->second;
     }
+    //Add the process to the list
     ProcessList cur = it->second;
     if(obj.get() == NULL)
     {
