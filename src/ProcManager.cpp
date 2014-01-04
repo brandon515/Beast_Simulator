@@ -27,6 +27,14 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group = "NONE")
             Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("New Group was not created for " + group)));
             return false;
         }
+        GroupEnt gEnt(hashGroup, true);
+        GroupRes gRes = groups.insert(gEnt);
+        if(res->first == false || res->second == std::map::end)
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Group boolen could not be added for group " + group)));
+            processes.erase(res->second);
+            return false;
+        }
         it = res->second;
     }
     ProcessList cur = it->second;
@@ -69,6 +77,54 @@ void ProcManager::pauseGroup(std::string groupName)
     it->second = false;
 }
 
+bool ProcManager::detachProcess(std::string name);
+{
+    uint32_t hash = CRC32(name.c_str(), name.length());
+    for(ProcessMap::iterator it = processes.begin(); it != processes.end(); it++)
+    {
+        ProcessList pro = it->second;
+        for(ProcessList::iterator prit = pro.begin(); prit != pro.end(); prit++)
+        {
+            if(prit->name == hash)
+            {
+                pro.erase(prit);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool ProcManager::resumeAllProcesses()
+{
+    allPaused = false;
+}
+
+bool ProcManager::resumeGroup(std::string groupName);
+{
+    uint32_t hash = CRC32(groupName.c_str(), groupName.length());
+    GroupMap::iterator it = groups.find(hash);
+    it->second = true;
+}
+
+bool ProcManager::resumeProcess(std::string name);
+{
+    uint32_t hash = CRC32(name.c_str(), name.length());
+    for(ProcessMap::iterator it = processes.begin(); it != processes.end(); it++)
+    {
+        ProcessList pro = it->second;
+        for(ProcessList::iterator priat = pro.begin(); priat = pro.end(); priat++)
+        {
+            if(priat->name == hash)
+            {
+                priat->isPaused = false;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void ProcManager::tick()
 {
     if(!allPaused)
@@ -76,11 +132,14 @@ void ProcManager::tick()
         for(ProcessMap::iterator it = processes.begin(); it != processes.end(); it++)
         {
             ProcessList pro = it->second;
-            for(ProcessList::iterator lit = pro.begin(); lit != pro.end(); lit++)
+            if(groups.find(it->first)->second == true)
             {
-                if(!lit->isPaused)
+                for(ProcessList::iterator lit = pro.begin(); lit != pro.end(); lit++)
                 {
-                    lit->tick();
+                    if(!lit->isPaused)
+                    {
+                        lit->tick();
+                    }
                 }
             }
         }

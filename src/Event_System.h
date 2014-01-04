@@ -63,7 +63,6 @@ class Event_System
         EventListenerMap m_registry;
         EventQueue m_queue[numQueues];
         uint32_t m_activeQueue;
-
 };
 
 #endif // EVENT_SYSTEM_H_INCLUDED

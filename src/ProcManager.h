@@ -17,6 +17,7 @@ class ProcManager
         bool detachProcess(std::string name);
         bool resumeGroup(std::string groupName);
         bool resumeProcess(std::string name);
+        bool resumeAllProcesses();
         void tick();
         
     private:
