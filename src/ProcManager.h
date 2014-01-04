@@ -4,6 +4,7 @@
 #include <map>
 #include <boost/shared_ptr.hpp>
 #include "Event_System.h"
+#include "MsgEvt.h"
 
 
 class ProcManager
