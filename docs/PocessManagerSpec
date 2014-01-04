@@ -1,0 +1,22 @@
+This document specifies the functions and goals of the process manager class
+
+Class Goals:
+    To give CPU time to any process that needs it
+    
+Function:
+    AttachProcess(ProcessPtr, ProcType):
+        Make sure ProcessPtr is not null
+        Get iterator from ProcessMap
+        If iterator equals map::end
+            Make new ProcessList = pcl
+            add ProcessPtr to pcl
+            
+            
+
+Variables:
+    boost::shared_ptr<Process> ProcessPtr
+    std::vector<ProcessPtr> ProcessList
+    std::map<uint32_t, ProcessList> ProcessMap
+
+Misc Notes:
+    ProcType is a uint32_t that is the hash value of a string given by the CRC32 algorithm
