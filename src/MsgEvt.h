@@ -1,10 +1,11 @@
 #include "Event.h"
 #include <ctime>
+#include <string>
 
 class Evt_MsgData : public IEventData
 {
     public:
-        Evt_MoveData(std::string outputStr):
+        Evt_MoveData(std::string outputStr)
         {
             time_t curTime = time(NULL);
             struct tm curDate = *localtime(&t);

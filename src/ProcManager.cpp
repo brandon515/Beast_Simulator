@@ -60,7 +60,7 @@ bool ProcManager::pauseProcess(std::string name)
         ProcessList pro = it->second;
         for(ProcessList::iterator lit = pro.begin(); lit != pro.end(); lit++)
         {
-            if(lit->name == hash)
+            if(lit->get()->name == hash)
             {
                 lit->isPaused = true;
                 return true;
@@ -90,7 +90,7 @@ bool ProcManager::detachProcess(std::string name);
         ProcessList pro = it->second;
         for(ProcessList::iterator prit = pro.begin(); prit != pro.end(); prit++)
         {
-            if(prit->name == hash)
+            if(prit->get()->name == hash)
             {
                 pro.erase(prit);
                 return true;
@@ -120,9 +120,9 @@ bool ProcManager::resumeProcess(std::string name);
         ProcessList pro = it->second;
         for(ProcessList::iterator priat = pro.begin(); priat = pro.end(); priat++)
         {
-            if(priat->name == hash)
+            if(priat->get()->name == hash)
             {
-                priat->isPaused = false;
+                priat->get()->isPaused = false;
                 return true;
             }
         }
@@ -141,9 +141,14 @@ void ProcManager::tick()
             {
                 for(ProcessList::iterator lit = pro.begin(); lit != pro.end(); lit++)
                 {
-                    if(!lit->isPaused)
+                    if(!lit->get()->isPaused)
                     {
-                        lit->tick();
+                        if(lit->get()->doKill())
+                        {
+                            pro.erase(lit);
+                            continue;
+                        }
+                        lit->get()->tick();
                     }
                 }
             }

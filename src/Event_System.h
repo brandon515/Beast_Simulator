@@ -1,7 +1,7 @@
 #ifndef EVENT_SYSTEM_H_INCLUDED
 #define EVENT_SYSTEM_H_INCLUDED
-#include <boost\shared_ptr.hpp>
-#include <boost\chrono.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/chrono.hpp>
 #include "IEventListener.h"
 #include "Event.h"
 #include "Logging.h"

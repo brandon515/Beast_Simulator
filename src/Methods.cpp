@@ -55,7 +55,7 @@ int count(string data, string ch)
     return count;
 }
 
-Sint32 getNumber(string dat, string name)
+int getNumber(string dat, string name)
 {
     string::size_type pos, pos2, pos3;
     string num;
@@ -189,80 +189,10 @@ double perlinNoise(double x, double y, int prime1, int prime2, int prime3, int z
     return total;
 }
 
-void createNoise(Uint32 *pix,int width, int height, int prime1, int prime2, int prime3, int zoom, int xOffset, int yOffset)
-{
-    for(int y = 0; y <= (height-1); y++)
-    {
-        for(int x = 0; x <= (width-1); x++)
-        {
-            int num = (int)(perlinNoise(x+1,y+1,prime1,prime2,prime3,zoom,xOffset,yOffset)*128+128);
-            if(num >255)
-                num = 255;
-            if(num < 0)
-                num = 0;
-            //cout << "value(" << x+1 << "," << y+1 << ") = " << num << "\n";
-            Uint32 val = (0x010000*num)+(0x000100*num)+num;
-            pix[y*width+x] = val;
-        }
-    }
-}
-
-void makeMap(Uint32 *noise, Uint32 *des, int width, int height, Uint32 threshold)
-{
-    for(int y = 0; y <= (height-1); y++)
-    {
-        for(int x = 0; x <= (width-1); x++)
-        {
-            Uint32 pixel = noise[y*width+x]%0x000100;
-            if(pixel > threshold)
-                des[y*width+x] = pixel * 0x000100;
-            else
-                des[y*width+x] = (0x0000ff-threshold) + pixel;
-        }
-    }
-}
-
 void halt(float ms)
 {
     double start = clock();
     while (clock()-start < ms);
-}
-
-Uint64 getBit(Uint32 pos)
-{
-    Uint64 beg = 1;
-    if(pos > 64 || pos < 1)
-    {
-        std::cerr << "out of range";
-        return 0;
-    }
-    return beg << (pos-1);
-}
-
-Uint64 getBitRange(Uint32 beg, Uint32 end)
-{
-    Uint64 num = 1, total = 0;
-    total += num << (beg-1);
-    if(end < beg)
-    {
-        std::cerr << "Error: ending bit is less than beginning bit\n";
-        return 0;
-    }
-    else if(end > 64 || end < 1)
-    {
-        std::cerr << "Error: ending bit is out of range";
-        return 0;
-    }
-    else if(beg >64 || beg < 1)
-    {
-        std::cerr << "Error: beginning bit is out of range";
-        return 0;
-    }
-    for(Uint32 i = beg; i < end; i++)
-    {
-        total += num << i;
-    }
-    return total;
 }
 
 uint32_t CRC32(const char *buf, unsigned long len)

@@ -2,20 +2,18 @@
 #define LOGGING_H_INCLUDED
 #include <fstream>
 #include <cassert>
-#include "Globals.h"
 #include "Methods.h"
-#include "GameEvents.h"
 #include "Event_System.h"
-#include <boost\date_time.hpp>
+#include "IEventListener.h"
 #include <sstream>
 
 
-class Logging
+class Logging : public IEventListener
 {
     public:
-        void log(std::string msg);
         Logging();
         ~Logging();
+        bool handleEvent(Event const & event);
     private:
         fstream file;
 };

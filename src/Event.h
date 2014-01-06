@@ -3,8 +3,8 @@
 #include "Methods.h"
 #include <iostream>
 #include <string.h>
-#include <boost\shared_ptr.hpp>
-#include <boost\chrono.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/chrono.hpp>
 
 class IEventData
 {

@@ -2,9 +2,9 @@
 #include <string>
 #include "Methods.h"
 #include <map>
-#include <boost/shared_ptr.hpp>
 #include "Event_System.h"
 #include "MsgEvt.h"
+#include "Process.h"
 
 
 class ProcManager
