@@ -1,6 +1,6 @@
 #include "ProcManager.h"
 
-bool ProcManager::addProcess(ProcessPtr obj, std::string group = "NONE")
+bool ProcManager::addProcess(ProcessPtr obj, std::string group)
 {
     //Check ProcessMap to see if obj already exists
     uint32_t hashGroup = CRC32(group.c_str(), group.length());
@@ -9,7 +9,7 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group = "NONE")
         ProcessList pro = tempIt->second;
         for(ProcessList::iterator listIt = pro.begin(); listIt != pro.end(); listIt++)
         {
-            if(listIt->name == obj->name)
+            if(listIt->get()->getHashName() == obj->getHashName())
             {
                 Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Proccess attempted to be added to two different groups")));
                 return false;
@@ -18,28 +18,30 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group = "NONE")
     }
     //If it doesnt yet exist in the system, add it
     ProcessMap::iterator it = processes.find(hashGroup);
-    if(it == std::map::end)
+    if(it == processes.end())
     {
         //it's being added to a group that doesnt exist yet so we create a new group and add it to the ProcessMap
         ProcessEnt ent(hashGroup, ProcessList());
         ProcessRes res = processes.insert(ent);
-        if(res->first && res->second != std::map::end)
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("New list added for group named: " + group)));
-        else
+        if(res.first == processes.end() || res.second == false)
         {
             Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("New Group was not created for " + group)));
             return false;
         }
+        else
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("New list added for group named: " + group)));
+        }
         //add the group to the boolean map
         GroupEnt gEnt(hashGroup, true);
         GroupRes gRes = groups.insert(gEnt);
-        if(res->first == false || res->second == std::map::end)
+        if(gRes.first == groups.end() || gRes.second == false)
         {
             Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Group boolen could not be added for group " + group)));
-            processes.erase(res->second);
+            processes.erase(res.second);
             return false;
         }
-        it = res->second;
+        it = res.first;
     }
     //Add the process to the list
     ProcessList cur = it->second;
@@ -47,22 +49,22 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group = "NONE")
     {
         return false;
     }
-    cur->push_back(obj);
+    cur.push_back(obj);
     return true;
 }
 
-bool ProcManager::pauseProcess(std::string name)
+bool ProcManager::pauseProcess(std::string processName)
 {
-    uint32_t hash = CRC32(name.c_str(), name.length());
+    uint32_t hash = CRC32(processName.c_str(), processName.length());
     ProcessMap::iterator it;
     for(it = processes.begin(); it != processes.end(); it++)
     {
         ProcessList pro = it->second;
         for(ProcessList::iterator lit = pro.begin(); lit != pro.end(); lit++)
         {
-            if(lit->get()->name == hash)
+            if(lit->get()->getHashName() == hash)
             {
-                lit->isPaused = true;
+                lit->get()->isPaused = true;
                 return true;
             }
         }
@@ -78,11 +80,11 @@ void ProcManager::pauseAllProcesses()
 void ProcManager::pauseGroup(std::string groupName)
 {
     uint32_t groupHash = CRC32(groupName.c_str(), groupName.length());
-    GroupMap::iterator it = map.find(groupHash);
+    GroupMap::iterator it = groups.find(groupHash);
     it->second = false;
 }
 
-bool ProcManager::detachProcess(std::string name);
+bool ProcManager::detachProcess(std::string name)
 {
     uint32_t hash = CRC32(name.c_str(), name.length());
     for(ProcessMap::iterator it = processes.begin(); it != processes.end(); it++)
@@ -90,7 +92,7 @@ bool ProcManager::detachProcess(std::string name);
         ProcessList pro = it->second;
         for(ProcessList::iterator prit = pro.begin(); prit != pro.end(); prit++)
         {
-            if(prit->get()->name == hash)
+            if(prit->get()->getHashName() == hash)
             {
                 pro.erase(prit);
                 return true;
@@ -105,22 +107,22 @@ bool ProcManager::resumeAllProcesses()
     allPaused = false;
 }
 
-bool ProcManager::resumeGroup(std::string groupName);
+bool ProcManager::resumeGroup(std::string groupName)
 {
     uint32_t hash = CRC32(groupName.c_str(), groupName.length());
     GroupMap::iterator it = groups.find(hash);
     it->second = true;
 }
 
-bool ProcManager::resumeProcess(std::string name);
+bool ProcManager::resumeProcess(std::string name)
 {
     uint32_t hash = CRC32(name.c_str(), name.length());
     for(ProcessMap::iterator it = processes.begin(); it != processes.end(); it++)
     {
         ProcessList pro = it->second;
-        for(ProcessList::iterator priat = pro.begin(); priat = pro.end(); priat++)
+        for(ProcessList::iterator priat = pro.begin(); priat != pro.end(); priat++)
         {
-            if(priat->get()->name == hash)
+            if(priat->get()->getHashName() == hash)
             {
                 priat->get()->isPaused = false;
                 return true;

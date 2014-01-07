@@ -11,10 +11,10 @@ class ProcManager
 {
     public:
         
-        bool addProcess(ProcessPtr obj, std::string group = "NONE");
-        bool pauseProcess(std::string name);
-        bool pauseAllProcesses();
-        bool pauseGroup(std::string groupName);
+        bool addProcess(ProcessPtr obj, std::string group);
+        bool pauseProcess(std::string processName);
+        void pauseAllProcesses();
+        void pauseGroup(std::string groupName);
         bool detachProcess(std::string name);
         bool resumeGroup(std::string groupName);
         bool resumeProcess(std::string name);
@@ -26,12 +26,13 @@ class ProcManager
         typedef std::vector<ProcessPtr> ProcessList;
         typedef std::map<uint32_t, ProcessList> ProcessMap;
         typedef std::pair<uint32_t, ProcessList> ProcessEnt;
-        typedef std::pair<bool, ProcessMap::iterator> ProcessRes;
+        typedef std::pair<ProcessMap::iterator, bool> ProcessRes;
         
         typedef std::map<uint32_t, bool> GroupMap;
         typedef std::pair<uint32_t, bool> GroupEnt;
-        typedef std::pair<bool, GroupMap::iterator> GroupRes;
+        typedef std::pair<GroupMap::iterator, bool> GroupRes;
 
         ProcessMap processes;
         GroupMap groups;
+        bool allPaused;
 };
