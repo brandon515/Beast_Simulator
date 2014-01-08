@@ -4,20 +4,15 @@
 HumanView::HumanView(std::string playerName):
     IEventListener(playerName)
 {
-<<<<<<< HEAD
-=======
     plName = playerName;
->>>>>>> 3e7a77d718251ff59f88a128d6f1b33dd3a6cfb6
 }
 
 HumanView::~HumanView()
 {
-    Logging().log("human view destroyed");
 }
 
 bool HumanView::init()
 {
-<<<<<<< HEAD
     uint32_t width, height, bitRate;
     std::string windowCaption;
 
@@ -76,9 +71,6 @@ bool HumanView::init()
         return false;
     }*/
 
-=======
->>>>>>> 3e7a77d718251ff59f88a128d6f1b33dd3a6cfb6
-    Logging().log("Human View created");
     return true;
 }
 
