@@ -25,7 +25,7 @@ class MsgEvt : public Event
             Event("Output Message", IEventDataPtr(new Evt_MsgData(output)))
             {}
         explicit MsgEvt():
-            Event("NULL Output Message")
+            Event("Empty Output Message")
             {}
 
 };

@@ -102,7 +102,7 @@ bool ProcManager::detachProcess(std::string name)
     return false;
 }
 
-bool ProcManager::resumeAllProcesses()
+void ProcManager::resumeAllProcesses()
 {
     allPaused = false;
 }
@@ -111,7 +111,15 @@ bool ProcManager::resumeGroup(std::string groupName)
 {
     uint32_t hash = CRC32(groupName.c_str(), groupName.length());
     GroupMap::iterator it = groups.find(hash);
-    it->second = true;
+    if(it != groups.end())
+    {
+        it->second = true;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool ProcManager::resumeProcess(std::string name)

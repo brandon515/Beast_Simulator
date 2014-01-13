@@ -6,7 +6,6 @@
 #include "MsgEvt.h"
 #include "Process.h"
 
-
 class ProcManager
 {
     public:
@@ -18,7 +17,7 @@ class ProcManager
         bool detachProcess(std::string name);
         bool resumeGroup(std::string groupName);
         bool resumeProcess(std::string name);
-        bool resumeAllProcesses();
+        void resumeAllProcesses();
         void tick();
         
     private:
