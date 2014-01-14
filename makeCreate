@@ -6,16 +6,32 @@ def strFormat(filename):
     hfile = open(filename, "r")
 
 if len(sys.argv) < 2:
-    print sys.argv[0] + " [fileName]"
+    print sys.argv[0] + " [fileName]\ncreates the file [filename] and makes it into a makefile for the subdirectories src and obj"
     sys.exit()
 
 mfile = open(sys.argv[1], "w")
 
 mfile.write("CC = gcc\nCFLAGS=-Wall -c\nLFLAGS=-Wall\nSRCDIR=/src/\nOBJDIR=/obj/\n\n")
+doWrite = False
 
 for root, dirs, files in os.walk("./src"):
     for a in files:
         if a.find(".h") != -1:
-            print a
+            tot = a + " : "
+            tfile = open("./src/"+a, "r")
+            for s in tfile:
+                if s == "\n":
+                    tot = tot + "\n"
+                    break
+                pos1 = s.find("\"")
+                if pos1 == -1:
+                    continue
+                pos2 = s.find("\"", pos1+1)
+                tot = tot + s[pos1+1:pos2] + " "
+                doWrite = True 
+            tfile.close()
+            if doWrite:
+                mfile.write(tot)
+            doWrite = False
 
 mfile.close()
