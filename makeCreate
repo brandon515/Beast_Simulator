@@ -6,12 +6,12 @@ def strFormat(filename):
     hfile = open(filename, "r")
 
 if len(sys.argv) < 2:
-    print sys.argv[0] + " [fileName]\ncreates the file [filename] and makes it into a makefile for the subdirectories src and obj"
+    print sys.argv[0] + " [fileName] [compiler flags] [linker flags]\ncreates the file [filename] and makes it into a makefile for the subdirectories src and obj"
     sys.exit()
 
 mfile = open(sys.argv[1], "w")
 
-mfile.write("CC = gcc\nCFLAGS=-Wall -c\nLFLAGS=-Wall\nSRCDIR=/src/\nOBJDIR=/obj/\n\n")
+mfile.write("CC = gcc\nCFLAGS=" + sys.argv[2] + "\nLFLAGS=" + sys.argv[3] + "\nSRCDIR=/src/\nOBJDIR=/obj/\n\n")
 doWrite = False
 
 for root, dirs, files in os.walk("./src"):
@@ -33,5 +33,7 @@ for root, dirs, files in os.walk("./src"):
             if doWrite:
                 mfile.write(tot)
             doWrite = False
+        elif a.find(".cpp") != -1:
+            print a
 
 mfile.close()
