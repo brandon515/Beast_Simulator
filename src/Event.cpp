@@ -35,7 +35,7 @@ void * EventType::getHash(const char * identStr)
 
     if(identStr == NULL)
         return NULL;
-    if(stricmp(identStr, wildCardType) == 0)
+    if(strcasecmp(identStr, wildCardType) == 0)
         return 0;
     uint64_t rA = CRC32(identStr, strlen(identStr));
     r = reinterpret_cast<void*>(rA);

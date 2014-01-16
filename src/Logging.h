@@ -6,6 +6,7 @@
 #include "Event_System.h"
 #include "IEventListener.h"
 #include <sstream>
+#include "MsgEvt.h"
 
 
 class Logging : public IEventListener

@@ -4,12 +4,12 @@
 #include <boost/chrono.hpp>
 #include "IEventListener.h"
 #include "Event.h"
-#include "Logging.h"
 #include <cassert>
 #include <set>
 #include <vector>
 #include <map>
 #include <list>
+#include <string.h>
 
 typedef boost::shared_ptr<IEventListener> EventListenerPtr;
 typedef boost::shared_ptr<Event> EventPtr;

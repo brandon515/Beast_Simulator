@@ -121,7 +121,7 @@ string getString(string dat, string name)
     }
     return opt;
 }*/
-Uint32 LCM(int f, int s)
+uint32_t LCM(int f, int s)
 {
     for(int i = 1; i <= s; i++)
     {

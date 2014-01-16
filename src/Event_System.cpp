@@ -17,7 +17,7 @@ bool Event_System::validateType(EventType const & type) const
 {
     if(type.getStr() == NULL)
         return false;
-    if((type.getIdent() == 0) && (stricmp(type.getStr(), wildCardType) != 0))
+    if((type.getIdent() == 0) && (strcasecmp(type.getStr(), wildCardType) != 0))
         return false;
     EventTypeSet::const_iterator searchRes = m_typeList.find(type);
 
@@ -28,7 +28,7 @@ bool Event_System::validateType(EventType const & type) const
         const char * const knownStr = known.getStr();
         const char * const typeStr = type.getStr();
 
-        int res = stricmp(knownStr, typeStr);
+        int res = strcasecmp(knownStr, typeStr);
 
         assert(res == 0 && "two event types have collided");
         if(res != 0)

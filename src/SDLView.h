@@ -12,8 +12,8 @@ class SDLView : public View
         ~SDLView();
         bool init();
         bool add(std::string name);
-        bool remove(std::string name);
-        void render();
+        void remove(std::string name);
+        bool render();
     private:
         std::string viewName;
         SDL_Window *window;

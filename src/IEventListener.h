@@ -6,12 +6,10 @@
 class IEventListener
 {
     public:
-        explicit IEventListener(std::string ID){uid = CRC32(ID.c_str(), ID.length());}
+        explicit IEventListener(){}
         virtual ~IEventListener(){}
         //return false if event is not consumed, true if it is
         virtual bool handleEvent(Event const & event) = 0;
-    private:
-        uint32_t uid;
 };
 
 #endif // IEVENTLISTENER_H_INCLUDED
