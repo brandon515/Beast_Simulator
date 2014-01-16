@@ -1,0 +1,2 @@
+./makeCreate relBuild "-Wall -I/usr/include/python2.7 -c"  "-Wall -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL2 -lpthread -lm -lboost_system -lboost_chrono" ./exe/Named
+./makeCreate debBuild "-Wall -I/usr/include/python2.7 -c -g"  "-Wall -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL2 -lpthread -lm -lboost_system -lboost_chrono" ./exe/Named_debug debug
