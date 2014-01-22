@@ -40,7 +40,7 @@ bool SDLView::init()
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if(renderer == NULL)
     {
-        std::string error = SDL_GetError();
+        std::string error(SDL_GetError());
         Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL window failed to initilize: " + error)));
         return false;
     } 
@@ -49,6 +49,87 @@ bool SDLView::init()
 
 bool SDLView::loadFile(std::string filename)
 {
+    Json::Value root = getRoot(filename);
+    if(root == Json::Value(false))
+        return false;
+    Json::Value array = root["mapObjects"];
+    for(int i = 0; true; i++)
+    {
+        if(!array.isValidIndex(i))
+            break;
+        Json::Value obj = array[i];
+        std::string name, objName;
+        name = obj["name"].asString();
+        objName = obj["objFile"].asString();
+        if(!add(name, objName))
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("JSON object under the mapObjects with the name " + name + " is not valid")));
+        }
+    }
+    return true;
+}
+
+bool SDLView::add(std::string name, std::string filename)
+{
+    Json::Value root = getRoot(filename);
+    if(root == Json::Value(false))
+        return false;
+    Json::Value imagePath = root["image"];
+    std::string imageStr = imagePath.asString();
+    SDL_Texture *tex = NULL;
+    SDL_Surface *sur = IMG_Load(imageStr.c_str());
+    if(sur == NULL)
+    {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
+            return false;
+    }
+    tex = SDL_CreateTextureFromSurface(renderer, sur);
+    if(tex == NULL)
+    {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
+            return false;
+    }
+    SDL_FreeSurface(sur);
+    uint32_t hash = CRC32(name.c_str(), name.length());
+    TextureEnt ent(hash, tex);
+    TextureRes res = textures.insert(ent);
+    if(res.first == textures.end() || res.second == false)
+    {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Texture " + imageStr + " couldn't be added into the Map")));
+            return false;
+    }
+    return true;
+}
+
+void SDLView::remove(std::string name)
+{
+    TextureMap::iterator it = textures.find(CRC32(name.c_str(), name.length()));
+    textures.erase(it);
+}
+
+void SDLView::preFrame()
+{
+    SDL_RenderClear(renderer);
+}
+
+void SDLView::onFrame(std::string name, int x, int y)
+{
+    uint32_t hash = CRC32(name.c_str(), name.length());
+    TextureMap::iterator it = textures.find(hash);
+    SDL_Texture *temp = it->second;
+    SDL_Rect rect;
+    rect.x = x;
+    rect.y = y;
+    SDL_RenderCopy(renderer, temp, NULL, &rect);
+}
+
+void SDLView::postFrame()
+{
+    SDL_RenderPresent(renderer);
+}
+
+Json::Value SDLView::getRoot(std::string filename)
+{
     Json::Value root;
     Json::Reader reader;
     ifstream file;
@@ -56,7 +137,7 @@ bool SDLView::loadFile(std::string filename)
     if(!file.is_open())
     {
         Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("file " + filename + " cannot be opened for Json parsing")));
-        return false;
+        return Json::Value(false);
     }
     file.seekg(0, file.end);
     int len = file.tellg();
@@ -68,34 +149,7 @@ bool SDLView::loadFile(std::string filename)
     if(!reader.parse(fileStr, root))
     {
         Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("JSON parser cannot parse the file: " + filename + "\n\treason:" + reader.getFormatedErrorMessages())));
-        return false;
+        return Json::Value(false);
     }
-    Json::Value array = root["mapObjects"];
-    for(int i = 0; true; i++)
-    {
-        Json::Value obj = array[i];
-        if(obj == NULL)
-            break;
-        std::string name, filename;
-        name = obj["name"].asString();
-        filename = obj["image"].asString();
-        add(name, filename);
-    }
-    return true;
-}
-
-bool SDLView::add(std::string name, std::string filename)
-{
-    
-    return false;
-}
-
-void SDLView::remove(std::string name)
-{
-    
-}
-
-bool SDLView::render()
-{
-    return false;
+    return root;
 }

@@ -1,2 +1,2 @@
-./makeCreate release "-Wall -I/usr/include/python2.7 -c"  "-Wall -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL2 -lpthread -lm -lboost_system -lboost_chrono -ljson" ./exe/Named
-./makeCreate debug "-Wall -I/usr/include/python2.7 -c -g"  "-Wall -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL2 -lpthread -lm -lboost_system -lboost_chrono -ljson" ./exe/Named_debug debug
+./makeCreate release "-Wall -I/usr/include/python2.7 -c"  "-Wall -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL2 -lpthread -lm -lSDL2_image -lboost_system -lboost_chrono -ljson" ./exe/Named
+./makeCreate debug "-Wall -I/usr/include/python2.7 -c -g"  "-Wall -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL2 -lpthread -lm -lSDL2_image -lboost_system -lboost_chrono -ljson" ./exe/Named_debug debug
