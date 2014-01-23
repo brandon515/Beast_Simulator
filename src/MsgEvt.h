@@ -12,7 +12,7 @@ class Evt_MsgData : public IEventData
             char buf[256];
             sprintf(buf, "[%d %d %d, %d:%d:%d:] ", curDate.tm_mon, curDate.tm_mday, curDate.tm_year, curDate.tm_hour, curDate.tm_min, curDate.tm_sec);
             std::string dateStr(buf);
-            output = dateStr + outputStr;
+            output = dateStr + outputStr + "\n";
         }
         ~Evt_MsgData(){}
         std::string output;
