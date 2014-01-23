@@ -13,7 +13,6 @@ class SDLView : public View
     public:
         SDLView(std::string view);
         ~SDLView();
-        bool loadFile(std::string filename);
         bool init();
         bool add(std::string name, std::string filename);
         void remove(std::string name);

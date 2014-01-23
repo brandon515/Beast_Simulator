@@ -47,28 +47,6 @@ bool SDLView::init()
     return true;
 }
 
-bool SDLView::loadFile(std::string filename)
-{
-    Json::Value root = getRoot(filename);
-    if(root == Json::Value(false))
-        return false;
-    Json::Value array = root["mapObjects"];
-    for(int i = 0; true; i++)
-    {
-        if(!array.isValidIndex(i))
-            break;
-        Json::Value obj = array[i];
-        std::string name, objName;
-        name = obj["name"].asString();
-        objName = obj["objFile"].asString();
-        if(!add(name, objName))
-        {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("JSON object under the mapObjects with the name " + name + " is not valid")));
-        }
-    }
-    return true;
-}
-
 bool SDLView::add(std::string name, std::string filename)
 {
     Json::Value root = getRoot(filename);

@@ -6,7 +6,8 @@ class Process
 {
     public:
         explicit Process(std::string sName){name = sName;kill=false;isPaused=false;}
-        virtual void tick();
+        virtual ~Process(){}
+        virtual void tick()=0;
         std::string getStrName(){return name;}
         uint32_t getHashName(){return CRC32(name.c_str(), name.length());}
         bool doKill(){return kill;}

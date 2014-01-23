@@ -1,15 +1,30 @@
 #include "DataModel.h"
 
+DataModel::DataModel(std::string name):
+    Process(name)
+{
+    
+}
+
+DataModel::~DataModel()
+{
+    
+}
+
 bool DataModel::loadFile(std::string filename)
 {
+    if(!data.empty())
+    {
+        data.clear();
+    }
     Json::Value root = getRoot(filename);
     if(root == Json::Value(false))
-        return false;
-    Json::Value array = root["mapObjects"];
-    for(int i = 0; true; i++)
     {
-        if(!array.isValidIndex(i))
-            break;
+        return false;
+    }
+    Json::Value array = root["mapObjects"];
+    for(uint32_t i = 0; i < array.size(); i++)
+    {
         Json::Value obj = array[i];
         std::string name, objName;
         name = obj["name"].asString();
@@ -21,7 +36,7 @@ bool DataModel::loadFile(std::string filename)
         ent.filename = objName;
         ent.x = x;
         ent.y = y;
-        DataEnt mapEnt(CRC32(ent.name), ent);
+        DataEnt mapEnt(CRC32(ent.name.c_str(), ent.name.length()), ent);
         DataRes res = data.insert(mapEnt);
         if(res.first == data.end() || res.second == false)
         {
@@ -55,4 +70,33 @@ Json::Value DataModel::getRoot(std::string filename)
         return Json::Value(false);
     }
     return root;
+}
+
+bool DataModel::add(View *obj)
+{
+    if(obj == NULL)
+        return false;
+    views.push_back(obj);
+    return true;
+}
+
+void DataModel::tick()
+{
+    ViewList::iterator it;
+    for(it = views.begin(); it != views.end(); it++)
+    {
+        (*it)->preFrame();
+    }
+    for(it = views.begin(); it != views.end(); it++)
+    {
+        for(DataMap::iterator it2 = data.begin(); it2 != data.end(); it2++)
+        {
+            DataPacket dat = it2->second;
+            (*it)->onFrame(dat.name, dat.x, dat.y);
+        }
+    }
+    for(it = views.begin(); it != views.end(); it++)
+    {
+        (*it)->postFrame();
+    }
 }
