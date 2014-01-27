@@ -11,7 +11,7 @@
 class SDLView : public View
 {
     public:
-        SDLView(std::string view);
+        SDLView();
         ~SDLView();
         bool init();
         bool add(std::string name, std::string filename);
@@ -31,7 +31,6 @@ class SDLView : public View
         Json::Value getRoot(std::string filename);
 
         TextureMap textures;
-        std::string viewName;
         SDL_Window *window;
         SDL_Renderer *renderer;
         bool fullscreen;

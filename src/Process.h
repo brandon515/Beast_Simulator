@@ -1,3 +1,5 @@
+#ifndef PROCESS_H_INCLUDED
+#define PROCESS_H_INCLUDED
 #include <boost/shared_ptr.hpp>
 #include "Methods.h"
 #include <string>
@@ -18,3 +20,4 @@ class Process
 };
 
 typedef boost::shared_ptr<Process> ProcessPtr;
+#endif

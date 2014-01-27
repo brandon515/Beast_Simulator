@@ -1,11 +1,11 @@
 #include "SDLView.h"
 
 
-SDLView::SDLView(std::string view):
+SDLView::SDLView():
+    View(0),
     window(NULL),
     renderer(NULL)
 {
-    viewName = view;
 }
 
 SDLView::~SDLView()
@@ -24,19 +24,40 @@ bool SDLView::init()
         Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL failed to initilize: " + error)));
         return false;
     }
+    Json::Value root = getRoot("WindowSettings");
+    uint32_t flags = 0;
+    if(root["fullscreen"].asBool() == true)
+    {
+        flags = SDL_WINDOW_FULLSCREEN_DESKTOP|SDL_WINDOW_BORDERLESS;
+    }
+    int w = 800, h = 600;
+    if(root["width"].isInt())
+    {
+        w = root["width"].asInt();
+    }
+    if(root["height"].isInt())
+    {
+        h = root["height"].asInt();
+    }
+    std::string title = "New Window";
+    if(root["title"].isString())
+    {
+        title = root["title"].asString();
+    }
     window = SDL_CreateWindow(
-                "Test Window",
+                title.c_str(),
                 SDL_WINDOWPOS_UNDEFINED,
                 SDL_WINDOWPOS_UNDEFINED,
-                0,
-                0,
-                SDL_WINDOW_FULLSCREEN_DESKTOP|SDL_WINDOW_BORDERLESS);
+                w,
+                h,
+                flags);
     if(window == NULL)
     {
         std::string error(SDL_GetError());
         Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL window failed to initilize: " + error)));
         return false;
     }
+    setID(SDL_GetWindowID(window));
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if(renderer == NULL)
     {

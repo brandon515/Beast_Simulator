@@ -4,6 +4,7 @@
 #include "MsgEvt.h"
 #include "View.h"
 #include "Event_System.h"
+#include <boost/shared_ptr.hpp>
 #include <map>
 #include <json/json.h>
 
@@ -21,6 +22,7 @@ class DataModel : public Process
         bool loadFile(std::string filename);
         void tick();
         bool add(View *obj);
+        void remove(uint32_t id);
     private:
         typedef std::map<uint32_t, DataPacket> DataMap;
         typedef std::pair<uint32_t, DataPacket> DataEnt;
@@ -33,3 +35,5 @@ class DataModel : public Process
 
         Json::Value getRoot(std::string filename);
 };
+
+typedef boost::shared_ptr<DataModel> DataModelPtr;

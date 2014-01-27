@@ -1,3 +1,5 @@
+#ifndef MSGEVT_H_INCLUDED
+#define MSGEVT_H_INCLUDED
 #include "Event.h"
 #include <ctime>
 #include <string>
@@ -29,3 +31,4 @@ class MsgEvt : public Event
             {}
 
 };
+#endif

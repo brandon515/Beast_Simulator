@@ -80,6 +80,15 @@ bool DataModel::add(View *obj)
     return true;
 }
 
+void DataModel::remove(uint32_t id)
+{
+    for(ViewList::iterator it = views.begin(); it != views.end(); it++)
+    {
+        if((*it)->getID() == id)
+            views.erase(it);
+    }
+}
+
 void DataModel::tick()
 {
     ViewList::iterator it;
