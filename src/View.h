@@ -2,6 +2,7 @@
 #define VIEW_H_INCLUDED
 #include <string>
 #include <stdint.h>
+#include <boost/shared_ptr.hpp>
 
 class View
 {
@@ -20,4 +21,6 @@ class View
     private:
         uint32_t id;
 };
+
+typedef boost::shared_ptr<View> ViewPtr;
 #endif

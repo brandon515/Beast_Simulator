@@ -72,15 +72,15 @@ Json::Value DataModel::getRoot(std::string filename)
     return root;
 }
 
-bool DataModel::add(View *obj)
+bool DataModel::addView(ViewPtr obj)
 {
-    if(obj == NULL)
+    if(obj.get() == NULL)
         return false;
     views.push_back(obj);
     return true;
 }
 
-void DataModel::remove(uint32_t id)
+void DataModel::removeView(uint32_t id)
 {
     for(ViewList::iterator it = views.begin(); it != views.end(); it++)
     {

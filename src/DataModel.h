@@ -21,14 +21,14 @@ class DataModel : public Process
         ~DataModel();
         bool loadFile(std::string filename);
         void tick();
-        bool add(View *obj);
-        void remove(uint32_t id);
+        bool addView(ViewPtr obj);
+        void removeView(uint32_t id);
     private:
         typedef std::map<uint32_t, DataPacket> DataMap;
         typedef std::pair<uint32_t, DataPacket> DataEnt;
         typedef std::pair<DataMap::iterator, bool> DataRes;
 
-        typedef std::vector<View*> ViewList;
+        typedef std::vector<ViewPtr> ViewList;
 
         DataMap data;
         ViewList views;
