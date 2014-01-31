@@ -9,6 +9,7 @@ class Process
     public:
         explicit Process(std::string sName){name = sName;kill=false;isPaused=false;}
         virtual ~Process(){}
+        virtual void init()=0;
         virtual void tick()=0;
         std::string getStrName(){return name;}
         uint32_t getHashName(){return CRC32(name.c_str(), name.length());}

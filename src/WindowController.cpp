@@ -7,9 +7,9 @@ WindowController::WindowController(DataModelPtr pModel)
 
 bool WindowController::handleEvent(Event const & event)
 {
-    if(Event.getType() == Evt_CloseWindow().getType())
+    if(event.getType() == Evt_CloseWindow().getType())
     {
-        Evt_CloseWindowData *dat = Event.getDataPtr<Evt_CloseWindowData>();
+        Evt_CloseWindowData *dat = event.getDataPtr<Evt_CloseWindowData>();
         model->removeView(dat->id);
         return true;
     }

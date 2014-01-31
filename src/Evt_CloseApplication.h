@@ -1,3 +1,5 @@
+#ifndef EVT_CLOSEAPPLICATION
+#define EVT_CLOSEAPPLICATION
 #include "Event.h"
 
 class Evt_CloseApplication : public Event
@@ -7,3 +9,4 @@ class Evt_CloseApplication : public Event
             Event("Close Applicaiton")
         {}
 };
+#endif

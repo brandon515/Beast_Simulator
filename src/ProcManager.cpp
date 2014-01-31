@@ -1,5 +1,10 @@
 #include "ProcManager.h"
 
+ProcManager::ProcManager()
+{
+    allPaused = false;
+}
+
 bool ProcManager::addProcess(ProcessPtr obj, std::string group)
 {
     //Check ProcessMap to see if obj already exists
@@ -21,8 +26,7 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group)
     if(it == processes.end())
     {
         //it's being added to a group that doesnt exist yet so we create a new group and add it to the ProcessMap
-        ProcessEnt ent(hashGroup, ProcessList());
-        ProcessRes res = processes.insert(ent);
+        ProcessRes res = processes.insert(ProcessEnt(hashGroup, ProcessList()));
         if(res.first == processes.end() || res.second == false)
         {
             Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("New Group was not created for " + group)));
@@ -43,12 +47,13 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group)
         }
         it = res.first;
     }
+    ProcessList &cur = (*it).second;
     //Add the process to the list
-    ProcessList cur = it->second;
     if(obj.get() == NULL)
     {
         return false;
     }
+    obj->init();
     cur.push_back(obj);
     return true;
 }
@@ -147,6 +152,11 @@ void ProcManager::tick()
         for(ProcessMap::iterator it = processes.begin(); it != processes.end(); it++)
         {
             ProcessList pro = it->second;
+            if(pro.empty())
+            {
+                std::cout << "it's empty!";
+                break;
+            }
             if(groups.find(it->first)->second == true)
             {
                 for(ProcessList::iterator lit = pro.begin(); lit != pro.end(); lit++)

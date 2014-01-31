@@ -10,6 +10,7 @@ class ProcManager
 {
     public:
         
+        ProcManager();
         bool addProcess(ProcessPtr obj, std::string group);
         bool pauseProcess(std::string processName);
         void pauseAllProcesses();

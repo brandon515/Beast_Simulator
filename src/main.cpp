@@ -10,13 +10,23 @@ int main(int argc, char *argv[])
     }
     SDLViewPtr view(new SDLView());
     model->addView(view);
-    proc.addProcess(model, "DataModel");
-    ApplicationControllerPtr app;
+    if(!proc.addProcess(model, "DataModel"))
+    {
+        std::cerr << "DataModel can not be added";
+        return 1;
+    }
+    SDLControllerPtr con(new SDLController());
+    if(!proc.addProcess(con, "Controllers"))
+    {
+        std::cerr << "Controller can not be added";
+        return 1;
+    }
+    ApplicationControllerPtr app(new ApplicationController());
     Event_System::getSingleton().addListener(app, Evt_CloseApplication().getType());
     while(!app->shutdown())
     {
         proc.tick();
-        Event_System::getSingleton().tick();
+        Event_System::getSingleton().tick(infMill);
     }
     return 0;
 }

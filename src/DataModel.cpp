@@ -8,7 +8,7 @@ DataModel::DataModel(std::string name):
 
 DataModel::~DataModel()
 {
-    
+    std::cout << "dead!\n";
 }
 
 bool DataModel::loadFile(std::string filename)
@@ -76,6 +76,7 @@ bool DataModel::addView(ViewPtr obj)
 {
     if(obj.get() == NULL)
         return false;
+    obj->init();
     views.push_back(obj);
     return true;
 }
@@ -91,6 +92,10 @@ void DataModel::removeView(uint32_t id)
 
 void DataModel::tick()
 {
+    if(views.empty())
+    {
+        Event_System::getSingleton().trigger(Evt_CloseApplication());
+    }
     ViewList::iterator it;
     for(it = views.begin(); it != views.end(); it++)
     {

@@ -1,9 +1,11 @@
 #include <string>
+#include <iostream>
 #include "Process.h"
 #include "Methods.h"
 #include "MsgEvt.h"
 #include "View.h"
 #include "Event_System.h"
+#include "Evt_CloseApplication.h"
 #include <boost/shared_ptr.hpp>
 #include <map>
 #include <json/json.h>
@@ -21,6 +23,7 @@ class DataModel : public Process
         ~DataModel();
         bool loadFile(std::string filename);
         void tick();
+        void init(){}
         bool addView(ViewPtr obj);
         void removeView(uint32_t id);
     private:
