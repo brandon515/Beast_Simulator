@@ -21,8 +21,14 @@ int main(int argc, char *argv[])
         std::cerr << "Controller can not be added";
         return 1;
     }
-    ApplicationControllerPtr app(new ApplicationController());
+    ApplicationControllerPtr app(new ApplicationController(model));
     Event_System::getSingleton().addListener(app, Evt_CloseApplication().getType());
+    DebugOutputPtr out(new DebugOutput());
+    if(!Event_System::getSingleton().addListener(out, MsgEvt().getType()))
+    {
+        std::cerr << "Could not add debug\n";
+        return 1;
+    }
     while(!app->shutdown())
     {
         proc.tick();

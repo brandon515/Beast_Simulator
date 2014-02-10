@@ -1,3 +1,5 @@
+#ifndef DATAMODEL_H_INCLUDED
+#define DATAMODEL_H_INCLUDED
 #include <string>
 #include <iostream>
 #include "Process.h"
@@ -23,7 +25,7 @@ class DataModel : public Process
         ~DataModel();
         bool loadFile(std::string filename);
         void tick();
-        void init(){}
+        bool init(){return true;}
         bool addView(ViewPtr obj);
         void removeView(uint32_t id);
     private:
@@ -40,3 +42,4 @@ class DataModel : public Process
 };
 
 typedef boost::shared_ptr<DataModel> DataModelPtr;
+#endif

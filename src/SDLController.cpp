@@ -7,7 +7,7 @@ SDLController::SDLController():
 SDLController::~SDLController()
 {}
 
-void SDLController::init()
+bool SDLController::init()
 {
     Json::Value root = getRoot("def/Keys");
     Json::Value keyNames = root["keyNames"];
@@ -28,6 +28,7 @@ void SDLController::init()
     file.open("def/Keys", ios::out|ios::trunc);
     file << newFile.c_str();
     file.close();
+    return true;
 }
 
 uint32_t SDLController::getKey()
@@ -52,7 +53,18 @@ void SDLController::tick()
     {
         if(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
         {
-            
+            EventPtr evt(new Evt_Keyboard(event.key.state == SDL_PRESSED, event.key.keysym.sym));
+            Event_System::getSingleton().queueEvent(evt);
+        }
+        else if(event.type == SDL_WINDOWEVENT)
+        {
+            switch(event.window.event)
+            case SDL_WINDOWEVENT_CLOSE:
+            {
+                EventPtr evt(new Evt_CloseWindow(event.window.windowID));
+                Event_System::getSingleton().queueEvent(evt);
+                break;
+            }
         }
     }
 }

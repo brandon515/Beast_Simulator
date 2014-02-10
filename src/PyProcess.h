@@ -1,14 +1,16 @@
 #include "Process.h"
+#include "Event_System.h"
+#include "MsgEvt.h"
 #include <Python.h>
 #include <string>
 
 class PyProcess : public Process
 {
     public:
-        PyProcess(std::string name);
+        PyProcess(std::string name, PyObject *pClass);
+        ~PyProcess();
         void tick();
-        void init();
+        bool init();
     private:
-        std::string module;
-        PyObject *func;
+        PyObject *pyTick, *pyClass;
 };

@@ -53,7 +53,10 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group)
     {
         return false;
     }
-    obj->init();
+    if(!obj->init())
+    {
+        return false;
+    }
     cur.push_back(obj);
     return true;
 }

@@ -3,6 +3,8 @@
 #include "Process.h"
 #include "Event.h"
 #include "MsgEvt.h"
+#include "Evt_Keyboard.h"
+#include "Evt_CloseWindow.h"
 #include <iostream>
 #include <map>
 #include <boost/shared_ptr.hpp>
@@ -14,7 +16,7 @@ class SDLController : public Process
     public:
         SDLController();
         ~SDLController();
-        void init();
+        bool init();
         void tick();
     private:
         typedef std::map<uint32_t, Event*> EventMap;

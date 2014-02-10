@@ -16,9 +16,15 @@ Event_System::~Event_System()
 bool Event_System::validateType(EventType const & type) const
 {
     if(type.getStr() == NULL)
+    {
+        std::cerr << "event type string is NULL\n";
         return false;
+    }
     if((type.getIdent() == 0) && (strcasecmp(type.getStr(), wildCardType) != 0))
+    {
+        std::cerr << type.getStr() << " type could not be hashed and/or is wildcardtype";
         return false;
+    }
     EventTypeSet::const_iterator searchRes = m_typeList.find(type);
 
     if(searchRes != m_typeList.end())
@@ -161,11 +167,17 @@ bool Event_System::queueEvent(EventPtr const & event)
     assert(m_activeQueue < numQueues);
 
     if(!validateType(event.get()->getType()))
+    {
+        std::cerr << event->getType().getStr() << " could not be validated\n";
         return false;
+    }
 
     EventListenerMap::iterator elmIt = m_registry.find(event.get()->getType().getIdent());
     if(elmIt == m_registry.end())
+    {   
+        std::cerr << event->getType().getStr() << " no one is listening for it\n";
         return false;
+    }
 
     m_queue[m_activeQueue].push_back(event);
     return true;

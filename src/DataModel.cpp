@@ -3,12 +3,10 @@
 DataModel::DataModel(std::string name):
     Process(name)
 {
-    
 }
 
 DataModel::~DataModel()
 {
-    std::cout << "dead!\n";
 }
 
 bool DataModel::loadFile(std::string filename)
@@ -112,5 +110,10 @@ void DataModel::tick()
     for(it = views.begin(); it != views.end(); it++)
     {
         (*it)->postFrame();
+    }
+    if(views.empty())
+    {
+        EventPtr evt(new Evt_CloseApplication()); 
+        Event_System::getSingleton().queueEvent(evt);
     }
 }

@@ -9,4 +9,7 @@
 #include <json/json.h>
 #include <fstream>
 #include "SDLController.h"
+#include "MsgEvt.h"
+#include "DebugOutput.h"
+
 
