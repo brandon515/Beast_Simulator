@@ -18,7 +18,7 @@ class Evt_CloseWindow : public Event
             Event("Close Window", IEventDataPtr(new Evt_CloseWindowData(pid)))
         {}
         explicit Evt_CloseWindow():
-           Event("Close Window")
+           Event("Close Window", IEventDataPtr(new Evt_CloseWindowData(0)))
         {}  
 };
 

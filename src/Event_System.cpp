@@ -168,14 +168,14 @@ bool Event_System::queueEvent(EventPtr const & event)
 
     if(!validateType(event.get()->getType()))
     {
-        std::cerr << event->getType().getStr() << " could not be validated\n";
+        std::cerr << "EventType with the identStr \"" << event->getType().getStr() << "\" could not be validated\n";
         return false;
     }
 
     EventListenerMap::iterator elmIt = m_registry.find(event.get()->getType().getIdent());
     if(elmIt == m_registry.end())
     {   
-        std::cerr << event->getType().getStr() << " no one is listening for it\n";
+        std::cerr << "No Listener for EventType with the IdentStr \"" << event->getType().getStr() << "\"\n";
         return false;
     }
 
