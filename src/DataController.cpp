@@ -25,7 +25,7 @@ bool DataController::handleEvent(Event const & event)
     else if(event.getType() == Evt_Keyboard().getType())
     {
         Evt_KeyboardData *dat = event.getDataPtr<Evt_KeyboardData>();
-        if(dat->key == 27 && !dat->keyDown)
+        if(dat->key == VirtualKeyboard::getSingleton().getKeyInt("exit") && !dat->keyDown)
         {
             model->removeView(currentFocusID);
             return true;

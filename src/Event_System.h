@@ -19,11 +19,10 @@ typedef std::vector<EventType> EventTypeList;
 const uint32_t numQueues = 2;
 const uint32_t infMill = 0xffffffff;
 
-/***********************************
-* this is not designed to be on    *
-* each idividual class but to used *
-* on entire systems remember block *
-* head!                            *
+/************************************
+* this is not designed to be on     *
+* each idividual class but to used  *
+* on entire systems                 *
 ************************************/
 class Event_System
 {
