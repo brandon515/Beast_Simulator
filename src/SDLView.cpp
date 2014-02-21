@@ -68,13 +68,9 @@ bool SDLView::init()
     return true;
 }
 
-bool SDLView::add(std::string name, std::string filename)
+bool SDLView::add(DataPacket data)
 {
-    Json::Value root = getRoot(filename);
-    if(root == Json::Value(false))
-        return false;
-    Json::Value imagePath = root["image"];
-    std::string imageStr = imagePath.asString();
+    std::string imageStr = data.getString("image");
     SDL_Texture *tex = NULL;
     SDL_Surface *sur = IMG_Load(imageStr.c_str());
     if(sur == NULL)
@@ -89,7 +85,7 @@ bool SDLView::add(std::string name, std::string filename)
             return false;
     }
     SDL_FreeSurface(sur);
-    uint32_t hash = CRC32(name.c_str(), name.length());
+    uint32_t hash = CRC32(data.getName().c_str(), data.getName().length());
     TextureEnt ent(hash, tex);
     TextureRes res = textures.insert(ent);
     if(res.first == textures.end() || res.second == false)
@@ -111,14 +107,15 @@ void SDLView::preFrame()
     SDL_RenderClear(renderer);
 }
 
-void SDLView::onFrame(std::string name, int x, int y)
+void SDLView::onFrame(DataPacket data)
 {
-    uint32_t hash = CRC32(name.c_str(), name.length());
+    uint32_t hash = CRC32(data.getName().c_str(), data.getName().length());
     TextureMap::iterator it = textures.find(hash);
     SDL_Texture *temp = it->second;
     SDL_Rect rect;
-    rect.x = x;
-    rect.y = y;
+    rect.x = data.getInt("x");
+    rect.y = data.getInt("y");
+    Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt(data.getName() + " x: " +boost::lexical_cast<std::string>(rect.x)+"\n"+data.getName()+" y: " +boost::lexical_cast<std::string>(rect.y))));
     SDL_RenderCopy(renderer, temp, NULL, &rect);
 }
 

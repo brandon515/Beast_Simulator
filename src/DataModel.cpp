@@ -3,17 +3,23 @@
 DataModel::DataModel(std::string name):
     Process(name)
 {
+    data = DataPtr(new DataMap());
 }
 
 DataModel::~DataModel()
 {
 }
 
+DataModel::DataConstPtr DataModel::getDataList()
+{
+    return data;
+}
+
 bool DataModel::loadFile(std::string filename)
 {
-    if(!data.empty())
+    if(!data->empty())
     {
-        data.clear();
+        data->clear();
     }
     Json::Value root = getRoot(filename);
     if(root == Json::Value(false))
@@ -24,22 +30,27 @@ bool DataModel::loadFile(std::string filename)
     for(uint32_t i = 0; i < array.size(); i++)
     {
         Json::Value obj = array[i];
-        std::string name, objName;
-        name = obj["name"].asString();
-        objName = obj["objFile"].asString();
-        int x = obj["x"].asInt();
-        int y = obj["y"].asInt();
-        DataPacket ent;
-        ent.name = name;
-        ent.filename = objName;
-        ent.x = x;
-        ent.y = y;
-        DataEnt mapEnt(CRC32(ent.name.c_str(), ent.name.length()), ent);
-        DataRes res = data.insert(mapEnt);
-        if(res.first == data.end() || res.second == false)
+        Json::Value dat = obj.get("data", false);
+        DataPacket ent(obj);
+        DataEnt mapEnt(CRC32(ent.getName().c_str(), ent.getName().length()), ent);
+        DataRes res = data->insert(mapEnt);
+        if(res.first == data->end() || res.second == false)
         {
             Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object not valid\n\tname: " + name)));
-        }   
+        }
+    }
+    return true;
+}
+
+bool DataModel::addObject(std::string name, std::string filename, std::string values)
+{
+    DataPacket ent(name, filename, values);
+    DataEnt mapEnt(CRC32(ent.getName().c_str(), ent.getName().length()), ent);
+    DataRes res = data->insert(mapEnt);
+    if(res.first == data->end() || res.second == false)
+    {
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object not valid\n\tname: " + name)));
+        return false;
     }
     return true;
 }
@@ -104,19 +115,14 @@ void DataModel::tick()
     }
     for(it = views.begin(); it != views.end(); it++)
     {
-        for(DataMap::iterator it2 = data.begin(); it2 != data.end(); it2++)
+        for(DataMap::iterator it2 = data->begin(); it2 != data->end(); it2++)
         {
             DataPacket dat = it2->second;
-            (*it)->onFrame(dat.name, dat.x, dat.y);
+            (*it)->onFrame(dat);
         }
     }
     for(it = views.begin(); it != views.end(); it++)
     {
         (*it)->postFrame();
-    }
-    if(views.empty())
-    {
-        EventPtr evt(new Evt_CloseApplication()); 
-        Event_System::getSingleton().queueEvent(evt);
     }
 }

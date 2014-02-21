@@ -11,16 +11,17 @@
 #include <boost/shared_ptr.hpp>
 #include <map>
 #include <json/json.h>
-
-typedef struct dataPacket
-{
-    std::string name, filename;
-    int x, y;
-} DataPacket;
+#include "DataPacket.h"
 
 class DataModel : public Process
 {
     public:
+        typedef std::map<uint32_t, DataPacket> DataMap;
+        typedef std::pair<uint32_t, DataPacket> DataEnt;
+        typedef std::pair<DataMap::iterator, bool> DataRes;
+        typedef boost::shared_ptr<const DataMap> DataConstPtr;
+        typedef boost::shared_ptr<DataMap> DataPtr;
+
         DataModel(std::string name);
         ~DataModel();
         bool loadFile(std::string filename);
@@ -28,17 +29,15 @@ class DataModel : public Process
         bool init(){return true;}
         bool addView(ViewPtr obj);
         void removeView(uint32_t id);
+        bool addObject(std::string name, std::string filename, std::string values);
+        bool removeObject(std::string name);
+        DataConstPtr getDataList();
+        static Json::Value getRoot(std::string filename);
     private:
-        typedef std::map<uint32_t, DataPacket> DataMap;
-        typedef std::pair<uint32_t, DataPacket> DataEnt;
-        typedef std::pair<DataMap::iterator, bool> DataRes;
-
         typedef std::vector<ViewPtr> ViewList;
 
-        DataMap data;
+        DataPtr data;
         ViewList views;
-
-        Json::Value getRoot(std::string filename);
 };
 
 typedef boost::shared_ptr<DataModel> DataModelPtr;

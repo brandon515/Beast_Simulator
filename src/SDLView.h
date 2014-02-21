@@ -5,8 +5,10 @@
 #include "Event_System.h"
 #include "View.h"
 #include "Methods.h"
+#include "DataPacket.h"
 #include <json/json.h>
 #include <fstream>
+#include <boost/lexical_cast.hpp>
 
 class SDLView : public View
 {
@@ -14,10 +16,10 @@ class SDLView : public View
         SDLView();
         ~SDLView();
         bool init();
-        bool add(std::string name, std::string filename);
+        bool add(DataPacket data);
         void remove(std::string name);
         void preFrame();
-        void onFrame(std::string name, int x, int y);
+        void onFrame(DataPacket data);
         void postFrame();
     private:
         //typedefs
