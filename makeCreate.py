@@ -21,7 +21,7 @@ for root, dirs, files in os.walk("./src"):
     for a in files:
         a = "./src/"+a
         if a.find(".h") != -1:
-            tot = a + " : "
+            tot = objPath + a[6:-1] + "o : " + a[0:-1] + "cpp " + a + " "
             tfile = open(a, "r")
             for s in tfile:
                 if s == "\n":
@@ -32,14 +32,12 @@ for root, dirs, files in os.walk("./src"):
                     continue
                 pos2 = s.find("\"", pos1+1)
                 tot = tot + "./src/" + s[pos1+1:pos2] + " "
-                doWrite = True 
             tfile.close()
-            if doWrite:
-                mfile.write(tot)
-            doWrite = False
-        elif a.find(".cpp") != -1:
-            mfile.write(objPath + a[6:-3] + "o : " + a + " " + a[0:-3] + "h\n\t$(CC) $(CFLAGS) " + a + " -o " + objPath + a[6:-3] + "o\n")
-            objs = objs + objPath + a[6:-3] + "o "
+            mfile.write(tot + "\t$(CC) $(CFLAGS) " + a[0:-1] + "cpp -o " + objPath + a[6:-1] + "o\n")
+            objs = objs + objPath + a[6:-1] + "o "
+        #elif a.find(".cpp") != -1:
+            #mfile.write(objPath + a[6:-3] + "o : " + a + "\n\t$(CC) $(CFLAGS) " + a + " -o " + objPath + a[6:-3] + "o\n")
+            #objs = objs + objPath + a[6:-3] + "o "
 
 mfile.write(sys.argv[4] + " : " + objs + "\n\t$(LC) " + objs + " $(LFLAGS) -o" + sys.argv[4])
 mfile.close()

@@ -10,9 +10,9 @@ class View
     public:
         View(uint32_t pid){id = pid;}
         virtual ~View(){}
-        virtual bool add(DataPacket data)=0;
+        virtual bool add(DataPacketPtr data)=0;
         virtual void preFrame()=0;
-        virtual void onFrame(DataPacket data)=0;
+        virtual void onFrame(DataPacketPtr data)=0;
         virtual void postFrame()=0;
         virtual void remove(std::string name)=0;
         virtual bool init()=0;

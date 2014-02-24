@@ -16,11 +16,11 @@
 class DataModel : public Process
 {
     public:
-        typedef std::map<uint32_t, DataPacket> DataMap;
-        typedef std::pair<uint32_t, DataPacket> DataEnt;
+        typedef std::map<uint32_t, DataPacketPtr> DataMap;
+        typedef std::pair<uint32_t, DataPacketPtr> DataEnt;
         typedef std::pair<DataMap::iterator, bool> DataRes;
         typedef boost::shared_ptr<const DataMap> DataConstPtr;
-        typedef boost::shared_ptr<DataMap> DataPtr;
+        typedef boost::shared_ptr<DataMap> DataMapPtr;
 
         DataModel(std::string name);
         ~DataModel();
@@ -36,7 +36,7 @@ class DataModel : public Process
     private:
         typedef std::vector<ViewPtr> ViewList;
 
-        DataPtr data;
+        DataMapPtr data;
         ViewList views;
 };
 
