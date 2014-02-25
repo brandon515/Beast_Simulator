@@ -15,5 +15,7 @@
 #include "MsgEvt.h"
 #include "DebugOutput.h"
 #include "DataController.h"
+#include <ctime>
+#include <time.h>
 
 

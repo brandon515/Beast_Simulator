@@ -36,10 +36,16 @@ int main(int argc, char *argv[])
     ApplicationControllerPtr app(new ApplicationController(model));
     Event_System::getSingleton().addListener(app, Evt_CloseApplication().getType());
 
+    float fps = 16;
+
     while(!app->shutdown())
     {
+        clock_t begTick = clock();
         proc.tick();
         Event_System::getSingleton().tick(infMill);
+        clock_t difTick = clock() - begTick;
+        while( (((float)difTick)/CLOCKS_PER_SEC) < 1.0f/fps)
+            difTick = clock() - begTick;
     }
     return 0;
 }

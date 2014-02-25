@@ -1,5 +1,116 @@
 #include "SDLView.h"
 
+Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
+{
+    int isAnimated = data->getBool("animated");
+    if(isAnimated < 1)
+    {
+        std::string imageStr = data->getString("image");
+        SDL_Texture *tex = NULL;
+        SDL_Surface *sur = IMG_Load(imageStr.c_str());
+        if(sur == NULL)
+        {
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
+        }
+        tex = SDL_CreateTextureFromSurface(render, sur);
+        if(tex == NULL)
+        {
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
+        }
+        SDL_FreeSurface(sur);
+        animated = false;
+        AnimationData dat;
+        dat.texture = tex;
+        dat.maxFrames = 1;
+        curFrame = 1;
+        dat.area.x = dat.area.y = 0;
+        SDL_QueryTexture(tex, NULL, NULL, &dat.area.w, &dat.area.h);
+        curTexture = dat;
+    }
+    else
+    {
+        std::vector<std::string> states;
+        states = data->getStringList("states");
+        for(std::vector<std::string>::iterator it = states.begin(); it != states.end(); it++)
+        {
+            //load texture
+            DataPacketPtr block = data->getBlock(*it);
+            std::string imageStr = block->getString("image");
+            if(imageStr.compare("noObject") == 0)
+            {
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Block " + (*it) + " is not valid")));
+                continue;
+            }
+            SDL_Texture *tex = NULL;
+            SDL_Surface *sur = IMG_Load(imageStr.c_str());
+            SDL_SetColorKey(sur, SDL_TRUE, SDL_MapRGB(sur->format, 0xFF, 0x00, 0xFF));
+            if(sur == NULL)
+            {
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
+                continue;
+            }
+            tex = SDL_CreateTextureFromSurface(render, sur);
+            SDL_FreeSurface(sur);
+            if(tex == NULL)
+            {
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
+                continue;
+            }
+            //load animation data
+            uint32_t hash = CRC32((*it).c_str(), (*it).length());
+            animated = true;
+            curFrame = 1;
+            AnimationData dat;
+            dat.texture = tex;
+            dat.maxFrames = block->getInt("frames");
+            dat.area.x = dat.area.y = 0;
+            dat.area.w = block->getInt("w");
+            dat.area.h = block->getInt("h");
+            //add to texture map
+            TextureEnt ent(hash, dat);
+            TextureRes res = textures.insert(ent);
+            if(res.first == textures.end() || res.second == false)
+            {
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Texture was not able to be added to map")));
+                continue;
+            }
+            //if starting state than make it so
+            if(data->getString("startingState").compare(*it) == 0)
+            {
+                curTexture = dat;
+            }
+        }
+    }
+}
+
+void Texture::render(SDL_Renderer *render, int x, int y)
+{
+    SDL_Rect pos;
+    pos.x = x;
+    pos.y = y;
+    curTexture.area.x = curTexture.area.w * (curFrame-1);
+    pos.w = curTexture.area.w;
+    pos.h = curTexture.area.h;
+    SDL_RenderCopy(render, curTexture.texture, &curTexture.area, &pos);
+    if(animated)
+    {
+        if(curFrame >= curTexture.maxFrames)
+            curFrame = 1;
+        else
+            curFrame += 1;
+    }
+    //Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("\tmaxFrames: " + boost::lexical_cast<std::string>(curTexture.maxFrames) + "\n\tcurFrames: " + boost::lexical_cast<std::string>(curFrame))));
+}
+
+bool Texture::setState(std::string pState)
+{
+    uint32_t hash = CRC32(pState.c_str(), pState.length());
+    TextureMap::iterator it = textures.find(hash);
+    if(it == textures.end())
+        return false;
+    curTexture = it->second;
+    return true;
+}
 
 SDLView::SDLView():
     View(0),
@@ -71,27 +182,13 @@ bool SDLView::init()
 
 bool SDLView::add(DataPacketPtr data)
 {
-    std::string imageStr = data->getString("image");
-    SDL_Texture *tex = NULL;
-    SDL_Surface *sur = IMG_Load(imageStr.c_str());
-    if(sur == NULL)
-    {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
-            return false;
-    }
-    tex = SDL_CreateTextureFromSurface(renderer, sur);
-    if(tex == NULL)
-    {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
-            return false;
-    }
-    SDL_FreeSurface(sur);
+    Texture *tex = new Texture(data, renderer);
     uint32_t hash = CRC32(data->getName().c_str(), data->getName().length());
     TextureEnt ent(hash, tex);
     TextureRes res = textures.insert(ent);
     if(res.first == textures.end() || res.second == false)
     {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Texture " + imageStr + " couldn't be added into the Map")));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Texture " + data->getName() + " couldn't be added into the Map")));
             return false;
     }
     return true;
@@ -112,12 +209,10 @@ void SDLView::onFrame(DataPacketPtr data)
 {
     uint32_t hash = CRC32(data->getName().c_str(), data->getName().length());
     TextureMap::iterator it = textures.find(hash);
-    SDL_Texture *temp = it->second;
-    SDL_Rect rect;
-    rect.x = data->getInt("x");
-    rect.y = data->getInt("y");
-    SDL_QueryTexture(temp, NULL, NULL, &rect.w, &rect.h);
-    SDL_RenderCopy(renderer, temp, NULL, &rect);
+    Texture *temp = it->second;
+    int x = data->getInt("x");
+    int y = data->getInt("y");
+    temp->render(renderer, x, y);
 }
 
 void SDLView::postFrame()

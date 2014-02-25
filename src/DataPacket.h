@@ -36,6 +36,4 @@ class DataPacket
         std::string name, objFile;
         Json::Value mutData, constData;
 };
-
-typedef boost::shared_ptr<DataPacket> DataPacketPtr;
 #endif

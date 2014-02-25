@@ -45,7 +45,7 @@ DataPacket::DataPacket(Json::Value obj)
     if(!obj.isMember("objFile"))
     {
         Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object with the name " + name + " has no filename field")));
-        constData = Json::Value();
+        constData = obj;
     }
     else
     {
@@ -54,12 +54,12 @@ DataPacket::DataPacket(Json::Value obj)
     }
     if(!obj.isMember("data"))
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object with the name: " + name + "has no mutData values")));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object with the name: " + name + " has no mutData values")));
     }
     Json::Value valuesArr = obj["data"];
     if(constData.isNull() || !constData.isMember("data"))
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object with the name: " + name + "has no mutData variables")));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object with the name: " + name + " has no mutData variables")));
         mutData = Json::Value();
     }
     else
@@ -96,7 +96,9 @@ int DataPacket::getBool(std::string name)
     int ret;
     if(mutData.isNull() || !mutData.isMember(name))
     {
-        ret = constData.get(name, -1).asBool();
+        if(!constData.isMember(name))
+            return -1;
+        ret = constData[name].asBool();
     }
     else
     {

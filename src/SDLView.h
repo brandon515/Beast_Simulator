@@ -10,22 +10,29 @@
 #include <fstream>
 #include <boost/lexical_cast.hpp>
 
+typedef struct _AnimationData
+{
+    SDL_Texture *texture;
+    uint32_t maxFrames;
+    SDL_Rect area;
+} AnimationData;
+
 class Texture
 {
     public:
-        Texture(DataPacketPtr data);
+        Texture(DataPacketPtr data, SDL_Renderer *render);
         void render(SDL_Renderer *render, int x, int y);
         bool setState(std::string pState);
     private:
-        typedef std::map<uint32_t, SDL_Texture*> TextureMap;
-        typedef std::pair<uint32_t, SDL_Texture*> TextureEnt;
-        typedef std::pair<TextureArrayMap::iterator, bool> TextureRes;
+        typedef std::map<uint32_t, AnimationData> TextureMap;
+        typedef std::pair<uint32_t, AnimationData> TextureEnt;
+        typedef std::pair<TextureMap::iterator, bool> TextureRes;
 
         std::string state;
         TextureMap textures;
-        SDL_Texture *curTexture;
-        SDL_Rect tex;
+        AnimationData curTexture;
         bool animated;
+        uint32_t curFrame;
 };
     
 
@@ -43,8 +50,8 @@ class SDLView : public View
     private:
         //typedefs
 
-        typedef std::map<uint32_t, SDL_Texture*> TextureMap;
-        typedef std::pair<uint32_t, SDL_Texture*> TextureEnt;
+        typedef std::map<uint32_t, Texture*> TextureMap;
+        typedef std::pair<uint32_t, Texture*> TextureEnt;
         typedef std::pair<TextureMap::iterator, bool> TextureRes;
 
         //private functions
