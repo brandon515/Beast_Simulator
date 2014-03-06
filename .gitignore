@@ -3,7 +3,6 @@
 ################
 
 exe/Named*
-exe/images/*.png
 
 #################
 ## Eclipse
