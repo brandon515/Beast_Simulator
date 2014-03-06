@@ -1,0 +1,10 @@
+{
+    "type" : ["renderable"],
+    "animated" : true,
+    "states" : [ "idle" ],
+    "idle" : {  "image" : "images/MegaManX.png",
+                "w" : 35,
+                "h" : 35,
+                "frames" : 11},
+    "data" : ["x", "y", "startingState"]
+}

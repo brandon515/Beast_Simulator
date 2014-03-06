@@ -31,5 +31,23 @@ bool DataController::handleEvent(Event const & event)
             return true;
         }
     }
+    else if(event.getType() == Evt_JoystickButton().getType())
+    {
+        Evt_JoystickButtonData *id = event.getDataPtr<Evt_JoystickButtonData>();
+        if(id->isPressed)
+        {
+            if(id->button == 0)
+                std::cout << "ho ho ho\n";
+        }
+        return true;
+    }
+    else if(event.getType() == Evt_JoystickAxis().getType())
+    {
+        Evt_JoystickAxisData *dat = event.getDataPtr<Evt_JoystickAxisData>();
+        if(dat->pos > 30000 || dat->pos < -30000)
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Joystick axis: " + boost::lexical_cast<std::string>(dat->axis) + "\nJoystick pos: " + boost::lexical_cast<std::string>(dat->pos))));
+        }
+    }
     return false;
 }

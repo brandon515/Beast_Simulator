@@ -56,8 +56,6 @@ class SDLView : public View
 
         //private functions
 
-        Json::Value getRoot(std::string filename);
-
         TextureMap textures;
         SDL_Window *window;
         SDL_Renderer *renderer;

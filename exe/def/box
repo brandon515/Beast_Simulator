@@ -1,0 +1,5 @@
+{
+    "type" : ["renderable"],
+    "image" : "images/box.png",
+    "data" : ["x", "y"]
+}

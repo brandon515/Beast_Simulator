@@ -35,8 +35,8 @@ DataPacket::DataPacket(Json::Value obj)
         return;
     if(!obj.isMember("name"))
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object has no name field")));
-        name = "noName";
+        constData = obj;
+        return;
     }
     else
     {

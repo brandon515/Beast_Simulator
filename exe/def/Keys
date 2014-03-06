@@ -1,0 +1,8 @@
+{
+   "keyNames" : [ "menu", "moveDown", "moveLeft", "moveRight", "moveUp" ],
+   "exit" : 27,
+   "moveDown" : 1073741905,
+   "moveLeft" : 1073741904,
+   "moveRight" : 1073741903,
+   "moveUp" : 1073741906
+}

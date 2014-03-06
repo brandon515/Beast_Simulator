@@ -136,26 +136,16 @@ bool SDLView::init()
         return false;
     }
     IMG_Init(IMG_INIT_PNG);
-    Json::Value root = getRoot("WindowSettings");
+    DataPacketPtr data(new DataPacket("", "def/WindowSettings", ""));
     uint32_t flags = 0;
-    if(root["fullscreen"].asBool() == true)
+    if(data->getBool("fullscreen") == true)
     {
         flags = SDL_WINDOW_FULLSCREEN_DESKTOP|SDL_WINDOW_BORDERLESS;
     }
     int w = 800, h = 600;
-    if(root["width"].isInt())
-    {
-        w = root["width"].asInt();
-    }
-    if(root["height"].isInt())
-    {
-        h = root["height"].asInt();
-    }
-    std::string title = "New Window";
-    if(root["title"].isString())
-    {
-        title = root["title"].asString();
-    }
+    w = data->getInt("width");
+    h = data->getInt("height");
+    std::string title = data->getString("title");
     window = SDL_CreateWindow(
                 title.c_str(),
                 SDL_WINDOWPOS_UNDEFINED,
@@ -174,7 +164,7 @@ bool SDLView::init()
     if(renderer == NULL)
     {
         std::string error(SDL_GetError());
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL window failed to initilize: " + error)));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL renderer failed to initilize: " + error)));
         return false;
     } 
     return true;
@@ -218,30 +208,4 @@ void SDLView::onFrame(DataPacketPtr data)
 void SDLView::postFrame()
 {
     SDL_RenderPresent(renderer);
-}
-
-Json::Value SDLView::getRoot(std::string filename)
-{
-    Json::Value root;
-    Json::Reader reader;
-    ifstream file;
-    file.open(filename.c_str());
-    if(!file.is_open())
-    {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("file " + filename + " cannot be opened for Json parsing")));
-        return Json::Value(false);
-    }
-    file.seekg(0, file.end);
-    int len = file.tellg();
-    file.seekg(0, file.beg);
-    char *dat = new char[len];
-    file.read(dat, len);
-    std::string fileStr(dat);
-    file.close();
-    if(!reader.parse(fileStr, root))
-    {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("JSON parser cannot parse the file: " + filename + "\n\treason:" + reader.getFormatedErrorMessages())));
-        return Json::Value(false);
-    }
-    return root;
 }

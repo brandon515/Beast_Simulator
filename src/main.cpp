@@ -32,11 +32,15 @@ int main(int argc, char *argv[])
     Event_System::getSingleton().addListener(dat, Evt_CloseWindow().getType());
     Event_System::getSingleton().addListener(dat, Evt_WindowFocus().getType());
     Event_System::getSingleton().addListener(dat, Evt_Keyboard().getType());
+    Event_System::getSingleton().addListener(dat, Evt_JoystickButton().getType());
+    Event_System::getSingleton().addListener(dat, Evt_JoystickAxis().getType());
 
     ApplicationControllerPtr app(new ApplicationController(model));
     Event_System::getSingleton().addListener(app, Evt_CloseApplication().getType());
 
-    float fps = 16;
+    DataPacketPtr settings(new DataPacket("", "def/settings", ""));
+
+    float fps = settings->getInt("fps");
 
     while(!app->shutdown())
     {
