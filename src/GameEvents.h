@@ -13,10 +13,9 @@ class Evt_Quit : public Event
 class Evt_MoveData : public IEventData
 {
     public:
-        Evt_MoveData(Sint16 px, Sint16 py, uint32_t pID):
+        Evt_MoveData(Sint16 px, Sint16 py, std::string name):
             x(px),
-            y(py),
-            ID(pID)
+            y(py)
         {}
         ~Evt_MoveData(){}
         Sint16 x, y;
@@ -26,8 +25,8 @@ class Evt_MoveData : public IEventData
 class Evt_Move : public Event
 {
     public:
-        explicit Evt_Move(Sint16 x, Sint16 y, uint32_t ID):
-            Event("move creature", IEventDataPtr(new Evt_MoveData(x,y, ID)))
+        explicit Evt_Move(Sint16 x, Sint16 y, std::string name):
+            Event("move creature", IEventDataPtr(new Evt_MoveData(x, y, name)))
             {}
         explicit Evt_Move():
             Event("move creature")

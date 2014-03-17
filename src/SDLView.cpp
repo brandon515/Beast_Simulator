@@ -172,6 +172,19 @@ bool SDLView::init()
 
 bool SDLView::add(DataPacketPtr data)
 {
+    std::vector<std::string> types;
+    types = data->getStringList("type");
+    bool isRenderable = false;
+    for(std::vector<std::string>::iterator it = types.begin(); it != types.end(); it++)
+    {
+        if((*it).compare("renderable") == 0)
+        {
+            isRenderable = true;
+            break;
+        }
+    }
+    if(!isRenderable)
+        return true;
     Texture *tex = new Texture(data, renderer);
     uint32_t hash = CRC32(data->getName().c_str(), data->getName().length());
     TextureEnt ent(hash, tex);

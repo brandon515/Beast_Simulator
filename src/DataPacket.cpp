@@ -35,7 +35,7 @@ DataPacket::DataPacket(Json::Value obj)
         return;
     if(!obj.isMember("name"))
     {
-        constData = obj;
+        mutData = obj;
         return;
     }
     else
