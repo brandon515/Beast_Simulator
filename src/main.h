@@ -21,5 +21,7 @@
 #include <boost/lexical_cast.hpp>
 #include "Evt_JoystickButton.h"
 #include "Evt_JoystickAxis.h"
+#include "EventParser.h"
+#include "Evt_Move.h"
 
 

@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
         std::cerr << "Could not add debug\n";
         return 1;
     }
+    Event_System::getSingleton().addListener(out, EventType(wildCardType));
 
     ProcManager proc;
     DataModelPtr model(new DataModel("main"));
@@ -29,11 +30,14 @@ int main(int argc, char *argv[])
         return 1;
     }
     DataControllerPtr dat(new DataController(model));
-    Event_System::getSingleton().addListener(dat, Evt_CloseWindow().getType());
-    Event_System::getSingleton().addListener(dat, Evt_WindowFocus().getType());
-    Event_System::getSingleton().addListener(dat, Evt_Keyboard().getType());
-    Event_System::getSingleton().addListener(dat, Evt_JoystickButton().getType());
-    Event_System::getSingleton().addListener(dat, Evt_JoystickAxis().getType());
+    if(!Event_System::getSingleton().addListener(dat, Evt_CloseWindow().getType()) ||
+    !Event_System::getSingleton().addListener(dat, Evt_WindowFocus().getType()) ||
+    !Event_System::getSingleton().addListener(dat, Evt_Keyboard().getType()) ||
+    !Event_System::getSingleton().addListener(dat, Evt_JoystickButton().getType()) ||
+    !Event_System::getSingleton().addListener(dat, Evt_JoystickAxis().getType()))
+    {
+        std::cerr << "DataController could not be added to event_system";
+    }
 
     ApplicationControllerPtr app(new ApplicationController(model));
     Event_System::getSingleton().addListener(app, Evt_CloseApplication().getType());
@@ -41,6 +45,8 @@ int main(int argc, char *argv[])
     DataPacketPtr settings(new DataPacket("", "def/settings", ""));
 
     float fps = settings->getInt("fps");
+
+    EventParser::parseEvent("move creature 2 3");
 
     while(!app->shutdown())
     {
