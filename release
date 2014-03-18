@@ -1,0 +1,66 @@
+CC = gcc
+LC=g++
+CFLAGS=-Wall -c -std=gnu++11
+LFLAGS=-Wall -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL2 -lSDL2_image -lboost_system -lboost_chrono -ljson -L/usr/lib -lpthread -ldl  -lutil -lm  -lpython2.7 -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions
+
+all : ./exe/Named
+./obj/release/Evt_WindowFocus.o : ./src/Evt_WindowFocus.cpp ./src/Evt_WindowFocus.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/Evt_WindowFocus.cpp -o ./obj/release/Evt_WindowFocus.o
+./obj/release/WindowController.o : ./src/WindowController.cpp ./src/WindowController.h ./src/IEventListener.h ./src/DataModel.h ./src/Evt_CloseWindow.h 
+	$(CC) $(CFLAGS) ./src/WindowController.cpp -o ./obj/release/WindowController.o
+./obj/release/PyProcess.o : ./src/PyProcess.cpp ./src/PyProcess.h ./src/Process.h ./src/Event_System.h ./src/MsgEvt.h 
+	$(CC) $(CFLAGS) ./src/PyProcess.cpp -o ./obj/release/PyProcess.o
+./obj/release/Evt_JoystickAxis.o : ./src/Evt_JoystickAxis.cpp ./src/Evt_JoystickAxis.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/Evt_JoystickAxis.cpp -o ./obj/release/Evt_JoystickAxis.o
+./obj/release/DataModel.o : ./src/DataModel.cpp ./src/DataModel.h ./src/Process.h ./src/Methods.h ./src/MsgEvt.h ./src/View.h ./src/Event_System.h ./src/Evt_CloseApplication.h ./src/DataPacket.h 
+	$(CC) $(CFLAGS) ./src/DataModel.cpp -o ./obj/release/DataModel.o
+./obj/release/SDLInjector.o : ./src/SDLInjector.cpp ./src/SDLInjector.h ./src/MsgEvt.h ./src/Event_System.h ./src/KeyboardInjector.h ./src/MsgEvt.h ./src/Evt_Keyboard.h ./src/Evt_CloseWindow.h ./src/Evt_WindowFocus.h ./src/Evt_JoystickButton.h ./src/Evt_JoystickAxis.h 
+	$(CC) $(CFLAGS) ./src/SDLInjector.cpp -o ./obj/release/SDLInjector.o
+./obj/release/DataPacket.o : ./src/DataPacket.cpp ./src/DataPacket.h ./src/Event_System.h ./src/MsgEvt.h 
+	$(CC) $(CFLAGS) ./src/DataPacket.cpp -o ./obj/release/DataPacket.o
+./obj/release/Evt_JoystickButton.o : ./src/Evt_JoystickButton.cpp ./src/Evt_JoystickButton.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/Evt_JoystickButton.cpp -o ./obj/release/Evt_JoystickButton.o
+./obj/release/main.o : ./src/main.cpp ./src/main.h ./src/ProcManager.h ./src/DataModel.h ./src/DataPacket.h ./src/SDLView.h ./src/Event_System.h ./src/Evt_CloseApplication.h ./src/Evt_CloseWindow.h ./src/Evt_Keyboard.h ./src/Evt_WindowFocus.h ./src/ApplicationController.h ./src/SDLInjector.h ./src/MsgEvt.h ./src/DebugOutput.h ./src/DataController.h ./src/Evt_JoystickButton.h ./src/Evt_JoystickAxis.h ./src/EventParser.h ./src/Evt_Move.h 
+	$(CC) $(CFLAGS) ./src/main.cpp -o ./obj/release/main.o
+./obj/release/DataController.o : ./src/DataController.cpp ./src/DataController.h ./src/IEventListener.h ./src/DataModel.h ./src/Evt_CloseWindow.h ./src/Evt_WindowFocus.h ./src/Evt_Keyboard.h ./src/Evt_JoystickButton.h ./src/Evt_JoystickAxis.h ./src/MsgEvt.h ./src/VirtualKeyboard.h 
+	$(CC) $(CFLAGS) ./src/DataController.cpp -o ./obj/release/DataController.o
+./obj/release/EventParser.o : ./src/EventParser.cpp ./src/EventParser.h ./src/Event_System.h ./src/MsgEvt.h ./src/Evt_Move.h ./src/Evt_CloseApplication.h ./src/Evt_CloseWindow.h ./src/Evt_JoystickAxis.h ./src/Evt_JoystickButton.h ./src/Evt_Keyboard.h ./src/Evt_WindowFocus.h 
+	$(CC) $(CFLAGS) ./src/EventParser.cpp -o ./obj/release/EventParser.o
+./obj/release/Evt_Keyboard.o : ./src/Evt_Keyboard.cpp ./src/Evt_Keyboard.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/Evt_Keyboard.cpp -o ./obj/release/Evt_Keyboard.o
+./obj/release/ApplicationController.o : ./src/ApplicationController.cpp ./src/ApplicationController.h ./src/IEventListener.h ./src/Evt_CloseApplication.h ./src/DataModel.h ./src/Evt_CloseWindow.h 
+	$(CC) $(CFLAGS) ./src/ApplicationController.cpp -o ./obj/release/ApplicationController.o
+./obj/release/Methods.o : ./src/Methods.cpp ./src/Methods.h 
+	$(CC) $(CFLAGS) ./src/Methods.cpp -o ./obj/release/Methods.o
+./obj/release/MsgEvt.o : ./src/MsgEvt.cpp ./src/MsgEvt.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/MsgEvt.cpp -o ./obj/release/MsgEvt.o
+./obj/release/Event.o : ./src/Event.cpp ./src/Event.h ./src/Methods.h 
+	$(CC) $(CFLAGS) ./src/Event.cpp -o ./obj/release/Event.o
+./obj/release/Event_System.o : ./src/Event_System.cpp ./src/Event_System.h ./src/IEventListener.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/Event_System.cpp -o ./obj/release/Event_System.o
+./obj/release/Evt_CloseApplication.o : ./src/Evt_CloseApplication.cpp ./src/Evt_CloseApplication.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/Evt_CloseApplication.cpp -o ./obj/release/Evt_CloseApplication.o
+./obj/release/Evt_CloseWindow.o : ./src/Evt_CloseWindow.cpp ./src/Evt_CloseWindow.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/Evt_CloseWindow.cpp -o ./obj/release/Evt_CloseWindow.o
+./obj/release/GameEvents.o : ./src/GameEvents.cpp ./src/GameEvents.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/GameEvents.cpp -o ./obj/release/GameEvents.o
+./obj/release/SDLView.o : ./src/SDLView.cpp ./src/SDLView.h ./src/MsgEvt.h ./src/Event_System.h ./src/View.h ./src/Methods.h ./src/DataPacket.h 
+	$(CC) $(CFLAGS) ./src/SDLView.cpp -o ./obj/release/SDLView.o
+./obj/release/KeyboardInjector.o : ./src/KeyboardInjector.cpp ./src/KeyboardInjector.h ./src/Event_System.h ./src/Process.h 
+	$(CC) $(CFLAGS) ./src/KeyboardInjector.cpp -o ./obj/release/KeyboardInjector.o
+./obj/release/VirtualKeyboard.o : ./src/VirtualKeyboard.cpp ./src/VirtualKeyboard.h ./src/Event_System.h ./src/MsgEvt.h 
+	$(CC) $(CFLAGS) ./src/VirtualKeyboard.cpp -o ./obj/release/VirtualKeyboard.o
+./obj/release/DebugOutput.o : ./src/DebugOutput.cpp ./src/DebugOutput.h ./src/MsgEvt.h ./src/Evt_CloseApplication.h ./src/Evt_CloseWindow.h ./src/Evt_JoystickAxis.h ./src/Evt_JoystickButton.h ./src/Evt_Keyboard.h ./src/Evt_Move.h ./src/Evt_WindowFocus.h ./src/IEventListener.h ./src/Event_System.h 
+	$(CC) $(CFLAGS) ./src/DebugOutput.cpp -o ./obj/release/DebugOutput.o
+./obj/release/ProcManager.o : ./src/ProcManager.cpp ./src/ProcManager.h ./src/Methods.h ./src/Event_System.h ./src/MsgEvt.h ./src/Process.h 
+	$(CC) $(CFLAGS) ./src/ProcManager.cpp -o ./obj/release/ProcManager.o
+./obj/release/IEventListener.o : ./src/IEventListener.cpp ./src/IEventListener.h ./src/Event.h 
+	$(CC) $(CFLAGS) ./src/IEventListener.cpp -o ./obj/release/IEventListener.o
+./obj/release/Evt_Move.o : ./src/Evt_Move.cpp ./src/Evt_Move.h ./src/Event.h ./src/Methods.h 
+	$(CC) $(CFLAGS) ./src/Evt_Move.cpp -o ./obj/release/Evt_Move.o
+./obj/release/Process.o : ./src/Process.cpp ./src/Process.h ./src/Methods.h 
+	$(CC) $(CFLAGS) ./src/Process.cpp -o ./obj/release/Process.o
+./obj/release/View.o : ./src/View.cpp ./src/View.h ./src/DataPacket.h 
+	$(CC) $(CFLAGS) ./src/View.cpp -o ./obj/release/View.o
+./exe/Named : ./obj/release/Evt_WindowFocus.o ./obj/release/WindowController.o ./obj/release/PyProcess.o ./obj/release/Evt_JoystickAxis.o ./obj/release/DataModel.o ./obj/release/SDLInjector.o ./obj/release/DataPacket.o ./obj/release/Evt_JoystickButton.o ./obj/release/main.o ./obj/release/DataController.o ./obj/release/EventParser.o ./obj/release/Evt_Keyboard.o ./obj/release/ApplicationController.o ./obj/release/Methods.o ./obj/release/MsgEvt.o ./obj/release/Event.o ./obj/release/Event_System.o ./obj/release/Evt_CloseApplication.o ./obj/release/Evt_CloseWindow.o ./obj/release/GameEvents.o ./obj/release/SDLView.o ./obj/release/KeyboardInjector.o ./obj/release/VirtualKeyboard.o ./obj/release/DebugOutput.o ./obj/release/ProcManager.o ./obj/release/IEventListener.o ./obj/release/Evt_Move.o ./obj/release/Process.o ./obj/release/View.o 
+	$(LC) ./obj/release/Evt_WindowFocus.o ./obj/release/WindowController.o ./obj/release/PyProcess.o ./obj/release/Evt_JoystickAxis.o ./obj/release/DataModel.o ./obj/release/SDLInjector.o ./obj/release/DataPacket.o ./obj/release/Evt_JoystickButton.o ./obj/release/main.o ./obj/release/DataController.o ./obj/release/EventParser.o ./obj/release/Evt_Keyboard.o ./obj/release/ApplicationController.o ./obj/release/Methods.o ./obj/release/MsgEvt.o ./obj/release/Event.o ./obj/release/Event_System.o ./obj/release/Evt_CloseApplication.o ./obj/release/Evt_CloseWindow.o ./obj/release/GameEvents.o ./obj/release/SDLView.o ./obj/release/KeyboardInjector.o ./obj/release/VirtualKeyboard.o ./obj/release/DebugOutput.o ./obj/release/ProcManager.o ./obj/release/IEventListener.o ./obj/release/Evt_Move.o ./obj/release/Process.o ./obj/release/View.o  $(LFLAGS) -o./exe/Named
