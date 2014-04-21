@@ -1,0 +1,11 @@
+{
+    "context" : "menu",
+    "mapObjects" : 
+    [
+        { 
+            "name"  :   "testBox",
+            "objFile" :   "def/box",
+            "data" : [ 300, 400 ]
+        }
+    ]
+}

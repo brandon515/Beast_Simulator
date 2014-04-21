@@ -8,6 +8,7 @@
 #include "View.h"
 #include "Event_System.h"
 #include "Evt_CloseApplication.h"
+#include "Evt_Context.h"
 #include <boost/shared_ptr.hpp>
 #include <map>
 #include <json/json.h>
@@ -25,6 +26,9 @@ class DataModel : public Process
         DataModel(std::string name);
         ~DataModel();
         bool loadFile(std::string filename);
+        bool loadMenu(std::string filename);
+        bool showMenu();
+        bool hideMenu();
         void tick();
         bool init(){return true;}
         bool addView(ViewPtr obj);
@@ -37,7 +41,10 @@ class DataModel : public Process
         typedef std::vector<ViewPtr> ViewList;
 
         DataMapPtr data;
+        DataMapPtr menu;
         ViewList views;
+        std::string curContext;
+        bool inMenu;
 };
 
 typedef boost::shared_ptr<DataModel> DataModelPtr;

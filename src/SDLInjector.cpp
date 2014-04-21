@@ -61,8 +61,11 @@ void SDLInjector::tick()
     {
         if(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
         {
-            EventPtr evt(new Evt_Keyboard(event.key.state == SDL_PRESSED, event.key.keysym.sym));
-            Event_System::getSingleton().queueEvent(evt);
+            if(event.key.repeat == 0)
+            {
+                Evt_Keyboard evt(event.key.state == SDL_PRESSED, event.key.keysym.sym);
+                Event_System::getSingleton().trigger(evt);
+            }
         }
         else if(event.type == SDL_WINDOWEVENT)
         {
@@ -70,27 +73,27 @@ void SDLInjector::tick()
             {
                 case SDL_WINDOWEVENT_CLOSE:
                 {
-                    EventPtr evt(new Evt_CloseWindow(event.window.windowID));
-                    Event_System::getSingleton().queueEvent(evt);
+                    Evt_CloseWindow evt(event.window.windowID);
+                    Event_System::getSingleton().trigger(evt);
                     break;
                 }
                 case SDL_WINDOWEVENT_FOCUS_GAINED:
                 {
-                    EventPtr evt(new Evt_WindowFocus(event.window.windowID));
-                    Event_System::getSingleton().queueEvent(evt);
+                    Evt_WindowFocus evt(event.window.windowID);
+                    Event_System::getSingleton().trigger(evt);
                     break;
                 }
             }
         }
         else if(event.type == SDL_JOYBUTTONDOWN || event.type == SDL_JOYBUTTONUP) 
         {
-            EventPtr evt(new Evt_JoystickButton(event.jbutton.state == SDL_PRESSED, event.jbutton.button));
-            Event_System::getSingleton().queueEvent(evt);
+            Evt_JoystickButton evt(event.jbutton.state == SDL_PRESSED, event.jbutton.button);
+            Event_System::getSingleton().trigger(evt);
         }
         else if(event.type == SDL_JOYAXISMOTION)
         {
-            EventPtr evt(new Evt_JoystickAxis(event.jaxis.axis, event.jaxis.value));
-            Event_System::getSingleton().queueEvent(evt);
+            Evt_JoystickAxis evt(event.jaxis.axis, event.jaxis.value);
+            Event_System::getSingleton().trigger(evt);
         }
     }
 }

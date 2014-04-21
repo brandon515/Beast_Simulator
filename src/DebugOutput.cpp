@@ -15,31 +15,7 @@ bool DebugOutput::handleEvent(Event const & event)
         Evt_MoveData *dat = event.getDataPtr<Evt_MoveData>();
         std::string msg = MsgEvt("Move Event recieved with following parameters:\n\tname: " + dat->name + "\n\tx: " + boost::lexical_cast<std::string>(dat->x) + "\n\ty: " + boost::lexical_cast<std::string>(dat->y)).getDataPtr<Evt_MsgData>()->output;
         std::cout << msg;
-        return true;
+        return false;
     }
-    else if(event.getType() == Evt_CloseApplication().getType())
-    {
-        
-    }
-    else if(event.getType() == Evt_CloseWindow().getType())
-    {
-        
-    }
-    else if(event.getType() == Evt_JoystickAxis().getType())
-    {
-        
-    }
-    else if(event.getType() == Evt_JoystickButton().getType())
-    {
-        
-    }
-    else if(event.getType() == Evt_Keyboard().getType())
-    {
-        
-    }
-    else if(event.getType() == Evt_WindowFocus().getType())
-    {
-        
-    }
-    return false;
+   return false;
 }

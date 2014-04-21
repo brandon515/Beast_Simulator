@@ -4,6 +4,8 @@ DataModel::DataModel(std::string name):
     Process(name)
 {
     data = DataMapPtr(new DataMap());
+    menu = DataMapPtr(new DataMap());
+    inMenu = false;
 }
 
 DataModel::~DataModel()
@@ -14,6 +16,82 @@ DataModel::DataConstPtr DataModel::getDataList()
 {
     return data;
 }
+
+bool DataModel::showMenu()
+{
+    if(!menu->empty() && !inMenu)
+    {
+        Event_System::getSingleton().trigger(Evt_Context("menu"));
+        for(DataMap::iterator dataIt = menu->begin(); dataIt != menu->end(); dataIt++)
+        {
+            for(ViewList::iterator viewIt = views.begin(); viewIt != views.end(); viewIt++)
+            {
+                if(!(*viewIt)->add(dataIt->second))
+                    Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("error in bringing up the menu")));
+            }
+        }
+        inMenu = true;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool DataModel::hideMenu()
+{
+    if(inMenu)
+    {
+        Event_System::getSingleton().trigger(Evt_Context(curContext));
+        for(DataMap::iterator dataIt = menu->begin(); dataIt != menu->end(); dataIt++)
+        {
+            for(ViewList::iterator viewIt = views.begin(); viewIt != views.end(); viewIt++)
+            {
+                (*viewIt)->remove(dataIt->second->getName());
+            }
+        }
+        inMenu = false;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool DataModel::loadMenu(std::string filename)
+{
+    if(!menu->empty())
+    {
+        menu->clear();
+    }
+    Json::Value root = getRoot(filename);
+    if(root == Json::Value(false))
+    {
+        return false;
+    }
+    Json::Value array = root["mapObjects"];
+    for(uint32_t i = 0; i < array.size(); i++)
+    {
+        Json::Value obj = array[i];
+        Json::Value dat = obj["data"];
+        if(dat.isNull())
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object data does not exist in " + filename)));
+            continue;
+        }
+        DataPacketPtr ent(new DataPacket(obj));
+        DataEnt mapEnt(CRC32(ent->getName().c_str(), ent->getName().length()), ent);
+        DataRes res = menu->insert(mapEnt);
+        if(res.first == menu->end() || res.second == false)
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object not valid\n\tname: " + name)));
+        }
+    }
+    return true;
+}
+    
 
 bool DataModel::loadFile(std::string filename)
 {
@@ -30,13 +108,23 @@ bool DataModel::loadFile(std::string filename)
     for(uint32_t i = 0; i < array.size(); i++)
     {
         Json::Value obj = array[i];
-        Json::Value dat = obj.get("data", false);
+        Json::Value dat = obj["data"];
+        if(dat.isNull())
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object data does not exist in " + filename)));
+            continue;
+        }
         DataPacketPtr ent(new DataPacket(obj));
         DataEnt mapEnt(CRC32(ent->getName().c_str(), ent->getName().length()), ent);
         DataRes res = data->insert(mapEnt);
         if(res.first == data->end() || res.second == false)
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object not valid\n\tname: " + name)));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object not valid\n\tname: " + ent->getName())));
+        }
+        for(ViewList::iterator it = views.begin(); it != views.end(); it++)
+        {
+            if(!(*it)->add(ent))
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Obj with name " + ent->getName() + " couldn't be added")));
         }
     }
     return true;

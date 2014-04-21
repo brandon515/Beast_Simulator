@@ -22,7 +22,7 @@ bool DataController::handleEvent(Event const & event)
         currentFocusID = id;
         return true;
     }
-    else if(event.getType() == Evt_Keyboard().getType())
+/*    else if(event.getType() == Evt_Keyboard().getType())
     {
         Evt_KeyboardData *dat = event.getDataPtr<Evt_KeyboardData>();
         if(dat->key == VirtualKeyboard::getSingleton().getKeyInt("exit") && !dat->keyDown)
@@ -30,8 +30,22 @@ bool DataController::handleEvent(Event const & event)
             model->removeView(currentFocusID);
             return true;
         }
+        return false;
+    }*/
+    else if(event.getType() == Evt_Menu().getType())
+    {
+        Evt_MenuData *dat = event.getDataPtr<Evt_MenuData>();
+        if(dat->open)
+        {
+            model->showMenu();
+        }
+        else
+        {
+            model->hideMenu();
+        }
+        return true;
     }
-    else if(event.getType() == Evt_JoystickButton().getType())
+/*    else if(event.getType() == Evt_JoystickButton().getType())
     {
         Evt_JoystickButtonData *id = event.getDataPtr<Evt_JoystickButtonData>();
         if(id->isPressed)
@@ -48,6 +62,6 @@ bool DataController::handleEvent(Event const & event)
         {
             Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Joystick axis: " + boost::lexical_cast<std::string>(dat->axis) + "\nJoystick pos: " + boost::lexical_cast<std::string>(dat->pos))));
         }
-    }
+    }*/
     return false;
 }

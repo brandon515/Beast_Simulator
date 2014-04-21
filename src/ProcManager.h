@@ -1,3 +1,5 @@
+#ifndef PROCMANAGER_H_INCLUDED
+#define PROCMANAGER_H_INCLUDED
 #include <vector>
 #include <string>
 #include "Methods.h"
@@ -36,3 +38,4 @@ class ProcManager
         GroupMap groups;
         bool allPaused;
 };
+#endif

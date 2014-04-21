@@ -1,4 +1,5 @@
 {
+    "context" : "stage",
     "mapObjects" : 
     [
         { 
@@ -9,7 +10,7 @@
         {
             "name"  :   "megaManz",
             "objFile" :   "def/MegaManTest",
-            "data" : [ 100, 100 , "idle"]
+            "data" : [ 100, 150 , "idle"]
         },
         {
             "name"  :   "megaManz2",
@@ -19,7 +20,7 @@
         {
             "name"  :   "megaManz3",
             "objFile" :   "def/MegaManTest",
-            "data" : [ 200, 100 , "idle"]
+            "data" : [ 200, 150 , "idle"]
         } ,
         {
             "name"  :   "megaManz4",

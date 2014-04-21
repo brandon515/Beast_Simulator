@@ -1,0 +1,19 @@
+{
+    "contexts" :["menu", "stage"],
+    "menu" :[
+                {  
+                    "name" : "Exit Menu",
+                    "type" : "action",
+                    "key" : 27,
+                    "eventStr" : "Menu Hide"
+                }
+            ],
+    "not menu" :[
+                    {
+                        "name" : "Show Menu",
+                        "type" : "action",
+                        "key" : 27,
+                        "eventStr" : "Menu Show"
+                    }
+                ]
+}

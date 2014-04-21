@@ -8,13 +8,17 @@ int main(int argc, char *argv[])
         std::cerr << "Could not add debug\n";
         return 1;
     }
-    Event_System::getSingleton().addListener(out, EventType(wildCardType));
+    Event_System::getSingleton().addListener(out, Evt_Move().getType());
 
     ProcManager proc;
     DataModelPtr model(new DataModel("main"));
     if(!model->loadFile("def/InPt"))
     {
         std::cerr << "Could not load insertion point";
+    }
+    if(!model->loadMenu("def/menu"))
+    {
+        std::cerr << "Could not load Menu file";
     }
     SDLViewPtr view(new SDLView());
     model->addView(view);
@@ -33,8 +37,7 @@ int main(int argc, char *argv[])
     if(!Event_System::getSingleton().addListener(dat, Evt_CloseWindow().getType()) ||
     !Event_System::getSingleton().addListener(dat, Evt_WindowFocus().getType()) ||
     !Event_System::getSingleton().addListener(dat, Evt_Keyboard().getType()) ||
-    !Event_System::getSingleton().addListener(dat, Evt_JoystickButton().getType()) ||
-    !Event_System::getSingleton().addListener(dat, Evt_JoystickAxis().getType()))
+    !Event_System::getSingleton().addListener(dat, Evt_Menu().getType()))
     {
         std::cerr << "DataController could not be added to event_system";
     }
@@ -42,11 +45,19 @@ int main(int argc, char *argv[])
     ApplicationControllerPtr app(new ApplicationController(model));
     Event_System::getSingleton().addListener(app, Evt_CloseApplication().getType());
 
+    InputControllerPtr input(new InputController());
+    if(!Event_System::getSingleton().addListener(input, Evt_Keyboard().getType()) ||
+    !Event_System::getSingleton().addListener(input, Evt_JoystickAxis().getType()) ||
+    !Event_System::getSingleton().addListener(input, Evt_JoystickButton().getType()) ||
+    !Event_System::getSingleton().addListener(input, Evt_Context().getType()) ||
+    !proc.addProcess(input->getInputProcess(), "Input"))
+    {
+        std::cerr << "Input system not inserted correctly";
+    }
+
     DataPacketPtr settings(new DataPacket("", "def/settings", ""));
 
     float fps = settings->getInt("fps");
-
-    EventParser::parseEvent("move creature 2 3");
 
     while(!app->shutdown())
     {
