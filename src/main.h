@@ -2,7 +2,6 @@
 #include "ProcManager.h"
 #include "DataModel.h"
 #include "DataPacket.h"
-#include "SDLView.h"
 #include "Event_System.h"
 #include "Evt_CloseApplication.h"
 #include "Evt_CloseWindow.h"
@@ -13,7 +12,6 @@
 #include <boost/shared_ptr.hpp>
 #include <json/json.h>
 #include <fstream>
-#include "SDLInjector.h"
 #include "MsgEvt.h"
 #include "DebugOutput.h"
 #include "Evt_Menu.h"
@@ -26,5 +24,6 @@
 #include "EventParser.h"
 #include "Evt_Move.h"
 #include "InputController.h"
+#include "OgreView.h"
 
 

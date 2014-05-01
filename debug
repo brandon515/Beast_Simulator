@@ -1,7 +1,7 @@
 CC = gcc
 LC=g++
 CFLAGS=-Wall -c -g -Werror -std=gnu++11
-LFLAGS=-Wall -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lSDL2 -lSDL2_image -lboost_system -lboost_chrono -ljson -L/usr/lib -lpthread -ldl  -lutil -lm  -lpython2.7 -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions
+LFLAGS=-Wall -L/usr/local/lib -Wl,-rpath,/usr/local/lib -lOgreMain -lboost_system -lboost_chrono -ljson -L/usr/lib -lpthread -ldl  -lutil -lm  -lpython2.7 -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions
 
 all : ./exe/Named_debug
 ./obj/debug/Evt_WindowFocus.o : ./src/Evt_WindowFocus.cpp ./src/Evt_WindowFocus.h ./src/Event.h 
@@ -12,19 +12,17 @@ all : ./exe/Named_debug
 	$(CC) $(CFLAGS) ./src/Evt_JoystickAxis.cpp -o ./obj/debug/Evt_JoystickAxis.o
 ./obj/debug/DataModel.o : ./src/DataModel.cpp ./src/DataModel.h ./src/Process.h ./src/Methods.h ./src/MsgEvt.h ./src/View.h ./src/Event_System.h ./src/Evt_CloseApplication.h ./src/Evt_Context.h ./src/DataPacket.h 
 	$(CC) $(CFLAGS) ./src/DataModel.cpp -o ./obj/debug/DataModel.o
-./obj/debug/SDLInjector.o : ./src/SDLInjector.cpp ./src/SDLInjector.h ./src/MsgEvt.h ./src/Event_System.h ./src/KeyboardInjector.h ./src/MsgEvt.h ./src/Evt_Keyboard.h ./src/Evt_CloseWindow.h ./src/Evt_WindowFocus.h ./src/Evt_JoystickButton.h ./src/Evt_JoystickAxis.h 
-	$(CC) $(CFLAGS) ./src/SDLInjector.cpp -o ./obj/debug/SDLInjector.o
 ./obj/debug/InputProcess.o : ./src/InputProcess.cpp ./src/InputProcess.h ./src/Process.h ./src/Methods.h ./src/EventParser.h 
 	$(CC) $(CFLAGS) ./src/InputProcess.cpp -o ./obj/debug/InputProcess.o
 ./obj/debug/DataPacket.o : ./src/DataPacket.cpp ./src/DataPacket.h ./src/Event_System.h ./src/MsgEvt.h 
 	$(CC) $(CFLAGS) ./src/DataPacket.cpp -o ./obj/debug/DataPacket.o
-./obj/debug/InputController.o : ./src/InputController.cpp ./src/InputController.h ./src/IEventListener.h ./src/Evt_Keyboard.h ./src/Evt_JoystickAxis.h ./src/Evt_JoystickButton.h ./src/Evt_Context.h ./src/InputProcess.h ./src/ProcManager.h 
+./obj/debug/InputController.o : ./src/InputController.cpp ./src/InputController.h ./src/IEventListener.h ./src/Evt_Keyboard.h ./src/Evt_JoystickAxis.h ./src/Evt_JoystickButton.h ./src/Evt_Context.h ./src/MsgEvt.h ./src/InputProcess.h ./src/ProcManager.h 
 	$(CC) $(CFLAGS) ./src/InputController.cpp -o ./obj/debug/InputController.o
 ./obj/debug/Evt_JoystickButton.o : ./src/Evt_JoystickButton.cpp ./src/Evt_JoystickButton.h ./src/Event.h 
 	$(CC) $(CFLAGS) ./src/Evt_JoystickButton.cpp -o ./obj/debug/Evt_JoystickButton.o
-./obj/debug/main.o : ./src/main.cpp ./src/main.h ./src/ProcManager.h ./src/DataModel.h ./src/DataPacket.h ./src/SDLView.h ./src/Event_System.h ./src/Evt_CloseApplication.h ./src/Evt_CloseWindow.h ./src/Evt_Keyboard.h ./src/Evt_WindowFocus.h ./src/ApplicationController.h ./src/SDLInjector.h ./src/MsgEvt.h ./src/DebugOutput.h ./src/Evt_Menu.h ./src/DataController.h ./src/Evt_JoystickButton.h ./src/Evt_JoystickAxis.h ./src/EventParser.h ./src/Evt_Move.h ./src/InputController.h 
+./obj/debug/main.o : ./src/main.cpp ./src/main.h ./src/ProcManager.h ./src/DataModel.h ./src/DataPacket.h ./src/Event_System.h ./src/Evt_CloseApplication.h ./src/Evt_CloseWindow.h ./src/Evt_Keyboard.h ./src/Evt_WindowFocus.h ./src/Evt_Context.h ./src/ApplicationController.h ./src/MsgEvt.h ./src/DebugOutput.h ./src/Evt_Menu.h ./src/DataController.h ./src/Evt_JoystickButton.h ./src/Evt_JoystickAxis.h ./src/EventParser.h ./src/Evt_Move.h ./src/InputController.h ./src/OgreView.h 
 	$(CC) $(CFLAGS) ./src/main.cpp -o ./obj/debug/main.o
-./obj/debug/DataController.o : ./src/DataController.cpp ./src/DataController.h ./src/IEventListener.h ./src/DataModel.h ./src/Evt_CloseWindow.h ./src/Evt_WindowFocus.h ./src/Evt_Keyboard.h ./src/Evt_JoystickButton.h ./src/Evt_JoystickAxis.h ./src/Evt_Menu.h ./src/MsgEvt.h ./src/VirtualKeyboard.h 
+./obj/debug/DataController.o : ./src/DataController.cpp ./src/DataController.h ./src/IEventListener.h ./src/DataModel.h ./src/Evt_CloseWindow.h ./src/Evt_WindowFocus.h ./src/Evt_Keyboard.h ./src/Evt_JoystickButton.h ./src/Evt_JoystickAxis.h ./src/Evt_Menu.h ./src/MsgEvt.h 
 	$(CC) $(CFLAGS) ./src/DataController.cpp -o ./obj/debug/DataController.o
 ./obj/debug/EventParser.o : ./src/EventParser.cpp ./src/EventParser.h ./src/Event_System.h ./src/MsgEvt.h ./src/Evt_Move.h ./src/Evt_CloseApplication.h ./src/Evt_CloseWindow.h ./src/Evt_JoystickAxis.h ./src/Evt_JoystickButton.h ./src/Evt_Keyboard.h ./src/Evt_WindowFocus.h 
 	$(CC) $(CFLAGS) ./src/EventParser.cpp -o ./obj/debug/EventParser.o
@@ -42,18 +40,16 @@ all : ./exe/Named_debug
 	$(CC) $(CFLAGS) ./src/Event_System.cpp -o ./obj/debug/Event_System.o
 ./obj/debug/Evt_Menu.o : ./src/Evt_Menu.cpp ./src/Evt_Menu.h ./src/Event.h 
 	$(CC) $(CFLAGS) ./src/Evt_Menu.cpp -o ./obj/debug/Evt_Menu.o
+./obj/debug/OgreView.o : ./src/OgreView.cpp ./src/OgreView.h ./src/View.h ./src/Event_System.h ./src/MsgEvt.h 
+	$(CC) $(CFLAGS) ./src/OgreView.cpp -o ./obj/debug/OgreView.o
 ./obj/debug/Evt_CloseApplication.o : ./src/Evt_CloseApplication.cpp ./src/Evt_CloseApplication.h ./src/Event.h 
 	$(CC) $(CFLAGS) ./src/Evt_CloseApplication.cpp -o ./obj/debug/Evt_CloseApplication.o
 ./obj/debug/Evt_CloseWindow.o : ./src/Evt_CloseWindow.cpp ./src/Evt_CloseWindow.h ./src/Event.h 
 	$(CC) $(CFLAGS) ./src/Evt_CloseWindow.cpp -o ./obj/debug/Evt_CloseWindow.o
 ./obj/debug/GameEvents.o : ./src/GameEvents.cpp ./src/GameEvents.h ./src/Event.h 
 	$(CC) $(CFLAGS) ./src/GameEvents.cpp -o ./obj/debug/GameEvents.o
-./obj/debug/SDLView.o : ./src/SDLView.cpp ./src/SDLView.h ./src/MsgEvt.h ./src/Event_System.h ./src/View.h ./src/Methods.h ./src/DataPacket.h 
-	$(CC) $(CFLAGS) ./src/SDLView.cpp -o ./obj/debug/SDLView.o
 ./obj/debug/KeyboardInjector.o : ./src/KeyboardInjector.cpp ./src/KeyboardInjector.h ./src/Event_System.h ./src/Process.h 
 	$(CC) $(CFLAGS) ./src/KeyboardInjector.cpp -o ./obj/debug/KeyboardInjector.o
-./obj/debug/VirtualKeyboard.o : ./src/VirtualKeyboard.cpp ./src/VirtualKeyboard.h ./src/Event_System.h ./src/MsgEvt.h 
-	$(CC) $(CFLAGS) ./src/VirtualKeyboard.cpp -o ./obj/debug/VirtualKeyboard.o
 ./obj/debug/DebugOutput.o : ./src/DebugOutput.cpp ./src/DebugOutput.h ./src/MsgEvt.h ./src/Evt_CloseApplication.h ./src/Evt_CloseWindow.h ./src/Evt_JoystickAxis.h ./src/Evt_JoystickButton.h ./src/Evt_Keyboard.h ./src/Evt_Move.h ./src/Evt_WindowFocus.h ./src/IEventListener.h ./src/Event_System.h 
 	$(CC) $(CFLAGS) ./src/DebugOutput.cpp -o ./obj/debug/DebugOutput.o
 ./obj/debug/ProcManager.o : ./src/ProcManager.cpp ./src/ProcManager.h ./src/Methods.h ./src/Event_System.h ./src/MsgEvt.h ./src/Process.h 
@@ -68,5 +64,5 @@ all : ./exe/Named_debug
 	$(CC) $(CFLAGS) ./src/Process.cpp -o ./obj/debug/Process.o
 ./obj/debug/View.o : ./src/View.cpp ./src/View.h ./src/DataPacket.h 
 	$(CC) $(CFLAGS) ./src/View.cpp -o ./obj/debug/View.o
-./exe/Named_debug : ./obj/debug/Evt_WindowFocus.o ./obj/debug/WindowController.o ./obj/debug/Evt_JoystickAxis.o ./obj/debug/DataModel.o ./obj/debug/SDLInjector.o ./obj/debug/InputProcess.o ./obj/debug/DataPacket.o ./obj/debug/InputController.o ./obj/debug/Evt_JoystickButton.o ./obj/debug/main.o ./obj/debug/DataController.o ./obj/debug/EventParser.o ./obj/debug/Evt_Keyboard.o ./obj/debug/ApplicationController.o ./obj/debug/Methods.o ./obj/debug/MsgEvt.o ./obj/debug/Event.o ./obj/debug/Event_System.o ./obj/debug/Evt_Menu.o ./obj/debug/Evt_CloseApplication.o ./obj/debug/Evt_CloseWindow.o ./obj/debug/GameEvents.o ./obj/debug/SDLView.o ./obj/debug/KeyboardInjector.o ./obj/debug/VirtualKeyboard.o ./obj/debug/DebugOutput.o ./obj/debug/ProcManager.o ./obj/debug/IEventListener.o ./obj/debug/Evt_Move.o ./obj/debug/Evt_Context.o ./obj/debug/Process.o ./obj/debug/View.o 
-	$(LC) ./obj/debug/Evt_WindowFocus.o ./obj/debug/WindowController.o ./obj/debug/Evt_JoystickAxis.o ./obj/debug/DataModel.o ./obj/debug/SDLInjector.o ./obj/debug/InputProcess.o ./obj/debug/DataPacket.o ./obj/debug/InputController.o ./obj/debug/Evt_JoystickButton.o ./obj/debug/main.o ./obj/debug/DataController.o ./obj/debug/EventParser.o ./obj/debug/Evt_Keyboard.o ./obj/debug/ApplicationController.o ./obj/debug/Methods.o ./obj/debug/MsgEvt.o ./obj/debug/Event.o ./obj/debug/Event_System.o ./obj/debug/Evt_Menu.o ./obj/debug/Evt_CloseApplication.o ./obj/debug/Evt_CloseWindow.o ./obj/debug/GameEvents.o ./obj/debug/SDLView.o ./obj/debug/KeyboardInjector.o ./obj/debug/VirtualKeyboard.o ./obj/debug/DebugOutput.o ./obj/debug/ProcManager.o ./obj/debug/IEventListener.o ./obj/debug/Evt_Move.o ./obj/debug/Evt_Context.o ./obj/debug/Process.o ./obj/debug/View.o  $(LFLAGS) -o./exe/Named_debug
+./exe/Named_debug : ./obj/debug/Evt_WindowFocus.o ./obj/debug/WindowController.o ./obj/debug/Evt_JoystickAxis.o ./obj/debug/DataModel.o ./obj/debug/InputProcess.o ./obj/debug/DataPacket.o ./obj/debug/InputController.o ./obj/debug/Evt_JoystickButton.o ./obj/debug/main.o ./obj/debug/DataController.o ./obj/debug/EventParser.o ./obj/debug/Evt_Keyboard.o ./obj/debug/ApplicationController.o ./obj/debug/Methods.o ./obj/debug/MsgEvt.o ./obj/debug/Event.o ./obj/debug/Event_System.o ./obj/debug/Evt_Menu.o ./obj/debug/OgreView.o ./obj/debug/Evt_CloseApplication.o ./obj/debug/Evt_CloseWindow.o ./obj/debug/GameEvents.o ./obj/debug/KeyboardInjector.o ./obj/debug/DebugOutput.o ./obj/debug/ProcManager.o ./obj/debug/IEventListener.o ./obj/debug/Evt_Move.o ./obj/debug/Evt_Context.o ./obj/debug/Process.o ./obj/debug/View.o 
+	$(LC) ./obj/debug/Evt_WindowFocus.o ./obj/debug/WindowController.o ./obj/debug/Evt_JoystickAxis.o ./obj/debug/DataModel.o ./obj/debug/InputProcess.o ./obj/debug/DataPacket.o ./obj/debug/InputController.o ./obj/debug/Evt_JoystickButton.o ./obj/debug/main.o ./obj/debug/DataController.o ./obj/debug/EventParser.o ./obj/debug/Evt_Keyboard.o ./obj/debug/ApplicationController.o ./obj/debug/Methods.o ./obj/debug/MsgEvt.o ./obj/debug/Event.o ./obj/debug/Event_System.o ./obj/debug/Evt_Menu.o ./obj/debug/OgreView.o ./obj/debug/Evt_CloseApplication.o ./obj/debug/Evt_CloseWindow.o ./obj/debug/GameEvents.o ./obj/debug/KeyboardInjector.o ./obj/debug/DebugOutput.o ./obj/debug/ProcManager.o ./obj/debug/IEventListener.o ./obj/debug/Evt_Move.o ./obj/debug/Evt_Context.o ./obj/debug/Process.o ./obj/debug/View.o  $(LFLAGS) -o./exe/Named_debug

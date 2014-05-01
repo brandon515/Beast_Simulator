@@ -16,7 +16,7 @@ bool parseEvent(std::string evt)
     size_t pos1 =  evt.find(" ");
     if(pos1 == std::string::npos)
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("no spaces in event: " + evt)));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Event Parser", "no spaces in event: " + evt)));
         return false;
     }
     std::string evtName = evt.substr(0, pos1);
@@ -27,7 +27,7 @@ bool parseEvent(std::string evt)
         size_t pos2 = evt.find(" ", pos1);
         if(pos2 == std::string::npos)
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("move event does not have enough arguments")));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Event Parser", "move event does not have enough arguments")));
             return false;
         }
         nameStr = evt.substr(pos1, (pos2-pos1));
@@ -35,7 +35,7 @@ bool parseEvent(std::string evt)
         pos1 = evt.find(" ", pos2);
         if(pos1 == std::string::npos)
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("move event does not have enough arguments")));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Event Parser", "move event does not have enough arguments")));
             return false;
         }
         xStr = evt.substr(pos2, (pos1-pos2));

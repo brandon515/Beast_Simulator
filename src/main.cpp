@@ -20,19 +20,21 @@ int main(int argc, char *argv[])
     {
         std::cerr << "Could not load Menu file";
     }
-    SDLViewPtr view(new SDLView());
+    //SDLViewPtr view(new SDLView());
+    //model->addView(view);
+    OgreViewPtr view(new OgreView());
     model->addView(view);
     if(!proc.addProcess(model, "DataModel"))
     {
         std::cerr << "DataModel can not be added";
         return 1;
     }
-    SDLInjectorPtr con(new SDLInjector());
+    /*SDLInjectorPtr con(new SDLInjector());
     if(!proc.addProcess(con, "Controllers"))
     {
         std::cerr << "Controller can not be added";
         return 1;
-    }
+    }*/
     DataControllerPtr dat(new DataController(model));
     if(!Event_System::getSingleton().addListener(dat, Evt_CloseWindow().getType()) ||
     !Event_System::getSingleton().addListener(dat, Evt_WindowFocus().getType()) ||

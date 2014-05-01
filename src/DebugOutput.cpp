@@ -13,7 +13,7 @@ bool DebugOutput::handleEvent(Event const & event)
     else if(event.getType() == Evt_Move().getType())
     {
         Evt_MoveData *dat = event.getDataPtr<Evt_MoveData>();
-        std::string msg = MsgEvt("Move Event recieved with following parameters:\n\tname: " + dat->name + "\n\tx: " + boost::lexical_cast<std::string>(dat->x) + "\n\ty: " + boost::lexical_cast<std::string>(dat->y)).getDataPtr<Evt_MsgData>()->output;
+        std::string msg = MsgEvt("Debug Output", "Move Event recieved with following parameters:\n\tname: " + dat->name + "\n\tx: " + boost::lexical_cast<std::string>(dat->x) + "\n\ty: " + boost::lexical_cast<std::string>(dat->y)).getDataPtr<Evt_MsgData>()->output;
         std::cout << msg;
         return false;
     }

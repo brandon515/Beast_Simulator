@@ -27,7 +27,7 @@ bool DataModel::showMenu()
             for(ViewList::iterator viewIt = views.begin(); viewIt != views.end(); viewIt++)
             {
                 if(!(*viewIt)->add(dataIt->second))
-                    Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("error in bringing up the menu")));
+                    Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "error in bringing up the menu")));
             }
         }
         inMenu = true;
@@ -78,7 +78,7 @@ bool DataModel::loadMenu(std::string filename)
         Json::Value dat = obj["data"];
         if(dat.isNull())
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object data does not exist in " + filename)));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "Json object data does not exist in " + filename)));
             continue;
         }
         DataPacketPtr ent(new DataPacket(obj));
@@ -86,7 +86,7 @@ bool DataModel::loadMenu(std::string filename)
         DataRes res = menu->insert(mapEnt);
         if(res.first == menu->end() || res.second == false)
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object not valid\n\tname: " + name)));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "Json object not valid\n\tname: " + name)));
         }
     }
     return true;
@@ -111,7 +111,7 @@ bool DataModel::loadFile(std::string filename)
         Json::Value dat = obj["data"];
         if(dat.isNull())
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object data does not exist in " + filename)));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "Json object data does not exist in " + filename)));
             continue;
         }
         DataPacketPtr ent(new DataPacket(obj));
@@ -119,12 +119,12 @@ bool DataModel::loadFile(std::string filename)
         DataRes res = data->insert(mapEnt);
         if(res.first == data->end() || res.second == false)
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object not valid\n\tname: " + ent->getName())));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "Json object not valid\n\tname: " + ent->getName())));
         }
         for(ViewList::iterator it = views.begin(); it != views.end(); it++)
         {
             if(!(*it)->add(ent))
-                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Obj with name " + ent->getName() + " couldn't be added")));
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "Obj with name " + ent->getName() + " couldn't be added")));
         }
     }
     return true;
@@ -137,13 +137,13 @@ bool DataModel::addObject(std::string name, std::string filename, std::string va
     DataRes res = data->insert(mapEnt);
     if(res.first == data->end() || res.second == false)
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object not valid\n\tname: " + name)));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "Json object not valid\n\tname: " + name)));
         return false;
     }
     for(ViewList::iterator it = views.begin(); it != views.end(); it++)
     {
         if(!(*it)->add(ent))
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Obj with name " + ent->getName() + " couldn't be added")));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "Obj with name " + ent->getName() + " couldn't be added")));
     } 
     return true;
 }
@@ -156,7 +156,7 @@ Json::Value DataModel::getRoot(std::string filename)
     file.open(filename.c_str());
     if(!file.is_open())
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("file " + filename + " cannot be opened for Json parsing")));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "file " + filename + " cannot be opened for Json parsing")));
         return Json::Value();
     }
     file.seekg(0, file.end);
@@ -168,7 +168,7 @@ Json::Value DataModel::getRoot(std::string filename)
     file.close();
     if(!reader.parse(fileStr, root))
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("JSON parser cannot parse the file: " + filename + "\n\treason:" + reader.getFormatedErrorMessages())));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "JSON parser cannot parse the file: " + filename + "\n\treason:" + reader.getFormatedErrorMessages())));
         return Json::Value();
     }
     return root;
@@ -177,13 +177,18 @@ Json::Value DataModel::getRoot(std::string filename)
 bool DataModel::addView(ViewPtr obj)
 {
     if(obj.get() == NULL)
+    {
         return false;
-    obj->init();
+    }
+    if(!obj->init())
+    {
+        return false;
+    }
     for(DataMap::iterator it = data->begin(); it != data->end(); it++)
     {
         if(!obj->add((*it).second))
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Obj with name " + (*it).second->getName() + " couldn't be added")));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model", "Obj with name " + (*it).second->getName() + " couldn't be added")));
         }
     }
     views.push_back(obj);

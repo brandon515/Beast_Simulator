@@ -7,7 +7,7 @@
 class Evt_MsgData : public IEventData
 {
     public:
-        Evt_MsgData(std::string outputStr);
+        Evt_MsgData(std::string name, std::string outputStr);
         ~Evt_MsgData(){}
         std::string output;
 };
@@ -15,8 +15,8 @@ class Evt_MsgData : public IEventData
 class MsgEvt : public Event
 {
     public:
-        explicit MsgEvt(std::string output):
-            Event("Output Message", IEventDataPtr(new Evt_MsgData(output)))
+        explicit MsgEvt(std::string name, std::string output):
+            Event("Output Message", IEventDataPtr(new Evt_MsgData(name,output)))
             {}
         explicit MsgEvt():
             Event("Output Message")

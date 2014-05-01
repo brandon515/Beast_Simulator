@@ -9,7 +9,6 @@
 #include "Evt_JoystickAxis.h"
 #include "Evt_Menu.h"
 #include "MsgEvt.h"
-#include "VirtualKeyboard.h"
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
 

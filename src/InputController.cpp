@@ -34,7 +34,7 @@ Json::Value InputController::getRoot(std::string filename)
     file.open(filename.c_str());
     if(!file.is_open())
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("file " + filename + " cannot be opened for Json parsing")));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Input Controller", "file " + filename + " cannot be opened for Json parsing")));
         return Json::Value();
     }
     file.seekg(0, file.end);
@@ -46,7 +46,7 @@ Json::Value InputController::getRoot(std::string filename)
     file.close();
     if(!reader.parse(fileStr, root))
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("JSON parser cannot parse the file: " + filename + "\n\treason:" + reader.getFormatedErrorMessages())));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Input Controller", "JSON parser cannot parse the file: " + filename + "\n\treason:" + reader.getFormatedErrorMessages())));
         return Json::Value();
     }
     return root;
