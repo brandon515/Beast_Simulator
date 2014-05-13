@@ -1,0 +1,5 @@
+{
+    "type" : ["renderable"],
+    "image" : "images/JapanBackground.png",
+    "data" : ["x", "y"]
+}

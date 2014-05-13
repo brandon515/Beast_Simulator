@@ -1,0 +1,13 @@
+{
+    "type" : ["renderable"],
+    "animated" : true,
+    "states" : [ "idle" ],
+    "idle" : {  "image" : "images/Ryu/RyuIdle.png",
+                "screenWidth" : 100,
+                "screenHeight" : 171,
+                "frameWidth" : 48,
+                "frameHeight" : 82,
+                "frames" : 4,
+                "fps" : 15},
+    "data" : ["x", "y", "startingState", "direction"]
+}

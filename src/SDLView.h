@@ -9,12 +9,13 @@
 #include <json/json.h>
 #include <fstream>
 #include <boost/lexical_cast.hpp>
+#include <time.h>
 
 typedef struct _AnimationData
 {
     SDL_Texture *texture;
-    uint32_t maxFrames;
-    SDL_Rect area;
+    uint32_t maxFrames, fps;
+    SDL_Rect area, screenArea;
 } AnimationData;
 
 class Texture
@@ -31,8 +32,9 @@ class Texture
         std::string state;
         TextureMap textures;
         AnimationData curTexture;
-        bool animated;
+        bool animated, lookingRight;
         uint32_t curFrame;
+        clock_t lastRenderTime;
 };
     
 

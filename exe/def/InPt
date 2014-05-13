@@ -3,50 +3,19 @@
     "mapObjects" : 
     [
         { 
-            "name"  :   "testBox",
-            "objFile" :   "def/box",
-            "data" : [ 50, 40 ]
+            "name"  :   "fightingBackground",
+            "objFile" :   "def/background",
+            "data" : [ 0, 0 ]
         },
         {
-            "name"  :   "megaManz",
-            "objFile" :   "def/MegaManTest",
-            "data" : [ 100, 150 , "idle"]
+            "name"  :   "Fighter1",
+            "objFile" :   "def/Ryu",
+            "data" : [ 100, 500 , "idle", "right"]
         },
         {
-            "name"  :   "megaManz2",
-            "objFile" :   "def/MegaManTest",
-            "data" : [ 150, 100 , "idle"]
-        },
-        {
-            "name"  :   "megaManz3",
-            "objFile" :   "def/MegaManTest",
-            "data" : [ 200, 150 , "idle"]
-        } ,
-        {
-            "name"  :   "megaManz4",
-            "objFile" :   "def/MegaManTest",
-            "data" : [ 250, 100 , "idle"]
-        },
-        {
-            "name"  :   "megaManz5",
-            "objFile" :   "def/MegaManTest",
-            "data" : [ 300, 100 , "idle"]
-        },
-        {
-            "name"  :   "megaManz6",
-            "objFile" :   "def/MegaManTest",
-            "data" : [ 350, 100 , "idle"]
-        },
-        {
-            "name"  :   "megaManz7",
-            "objFile" :   "def/MegaManTest",
-            "data" : [ 400, 100 , "idle"]
-        },
-        {
-            "name"  :   "megaManz8",
-            "objFile" :   "def/MegaManTest",
-            "data" : [ 450, 100 , "idle"]
+            "name"  :   "Figher2",
+            "objFile" :   "def/Ryu",
+            "data" : [ 1000, 500 , "idle", "left"]
         }
-
     ]
 }

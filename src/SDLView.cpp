@@ -3,6 +3,19 @@
 Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
 {
     int isAnimated = data->getBool("animated");
+    string direct = data->getString("direction");
+    if(direct.compare("right") == 0)
+    {
+        lookingRight = true;
+    }
+    else if(direct.compare("left") == 0)
+    {
+        lookingRight = false;
+    }
+    else
+    {
+        lookingRight = true;
+    }
     if(isAnimated < 1)
     {
         std::string imageStr = data->getString("image");
@@ -10,12 +23,12 @@ Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
         SDL_Surface *sur = IMG_Load(imageStr.c_str());
         if(sur == NULL)
         {
-                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
         }
         tex = SDL_CreateTextureFromSurface(render, sur);
         if(tex == NULL)
         {
-                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
         }
         SDL_FreeSurface(sur);
         animated = false;
@@ -24,13 +37,16 @@ Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
         dat.maxFrames = 1;
         curFrame = 1;
         dat.area.x = dat.area.y = 0;
-        SDL_QueryTexture(tex, NULL, NULL, &dat.area.w, &dat.area.h);
+        SDL_QueryTexture(tex, NULL, NULL, &dat.screenArea.w, &dat.screenArea.h);
+        dat.area.w = dat.screenArea.w;
+        dat.area.h = dat.screenArea.h;
         curTexture = dat;
     }
     else
     {
         std::vector<std::string> states;
         states = data->getStringList("states");
+        lastRenderTime = 0;
         for(std::vector<std::string>::iterator it = states.begin(); it != states.end(); it++)
         {
             //load texture
@@ -64,8 +80,11 @@ Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
             dat.texture = tex;
             dat.maxFrames = block->getInt("frames");
             dat.area.x = dat.area.y = 0;
-            dat.area.w = block->getInt("w");
-            dat.area.h = block->getInt("h");
+            dat.area.w = block->getInt("frameWidth");
+            dat.area.h = block->getInt("frameHeight");
+            dat.screenArea.w = block->getInt("screenWidth");
+            dat.screenArea.h = block->getInt("screenHeight");
+            dat.fps = block->getInt("fps");
             //add to texture map
             TextureEnt ent(hash, dat);
             TextureRes res = textures.insert(ent);
@@ -85,21 +104,32 @@ Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
 
 void Texture::render(SDL_Renderer *render, int x, int y)
 {
+    float deltaRenderTime, secondsPerFrame;
+    if(animated)
+    {
+        deltaRenderTime = boost::lexical_cast<float>(clock()-lastRenderTime)/CLOCKS_PER_SEC;  
+        secondsPerFrame = 1.0f/boost::lexical_cast<float>(curTexture.fps);
+    }
     SDL_Rect pos;
     pos.x = x;
     pos.y = y;
     curTexture.area.x = curTexture.area.w * (curFrame-1);
-    pos.w = curTexture.area.w;
-    pos.h = curTexture.area.h;
-    SDL_RenderCopy(render, curTexture.texture, &curTexture.area, &pos);
-    if(animated)
+    pos.w = curTexture.screenArea.w;
+    pos.h = curTexture.screenArea.h;
+    SDL_RendererFlip flipIt = lookingRight ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+    SDL_RenderCopyEx(render, curTexture.texture, &curTexture.area, &pos, 0, NULL, flipIt);
+    if(animated && deltaRenderTime > secondsPerFrame)
     {
         if(curFrame >= curTexture.maxFrames)
+        {
             curFrame = 1;
+        }
         else
+        {
             curFrame += 1;
+        }
+        lastRenderTime = clock();
     }
-    //Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("\tmaxFrames: " + boost::lexical_cast<std::string>(curTexture.maxFrames) + "\n\tcurFrames: " + boost::lexical_cast<std::string>(curFrame))));
 }
 
 bool Texture::setState(std::string pState)

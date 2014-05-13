@@ -5,6 +5,7 @@
     "idle" : {  "image" : "images/MegaManX.png",
                 "w" : 35,
                 "h" : 35,
-                "frames" : 11},
+                "frames" : 11,
+                "fps" : 11},
     "data" : ["x", "y", "startingState"]
 }
