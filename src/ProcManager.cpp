@@ -16,7 +16,7 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group)
         {
             if(listIt->get()->getHashName() == obj->getHashName())
             {
-                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Proccess attempted to be added to two different groups")));
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Process Manager","Proccess attempted to be added to two different groups")));
                 return false;
             }
         }
@@ -29,19 +29,19 @@ bool ProcManager::addProcess(ProcessPtr obj, std::string group)
         ProcessRes res = processes.insert(ProcessEnt(hashGroup, ProcessList()));
         if(res.first == processes.end() || res.second == false)
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("New Group was not created for " + group)));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Process Manager","New Group was not created for " + group)));
             return false;
         }
         else
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("New list added for group named: " + group)));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Process Manager","New list added for group named: " + group)));
         }
         //add the group to the boolean map
         GroupEnt gEnt(hashGroup, true);
         GroupRes gRes = groups.insert(gEnt);
         if(gRes.first == groups.end() || gRes.second == false)
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Group boolen could not be added for group " + group)));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Process Manager","Group boolen could not be added for group " + group)));
             processes.erase(res.second);
             return false;
         }

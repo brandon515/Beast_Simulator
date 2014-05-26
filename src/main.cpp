@@ -8,8 +8,6 @@ int main(int argc, char *argv[])
         std::cerr << "Could not add debug\n";
         return 1;
     }
-    Event_System::getSingleton().addListener(out, Evt_Move().getType());
-
     ProcManager proc;
     DataModelPtr model(new DataModel("main"));
     if(!model->loadFile("def/InPt"))
@@ -36,8 +34,8 @@ int main(int argc, char *argv[])
     DataControllerPtr dat(new DataController(model));
     if(!Event_System::getSingleton().addListener(dat, Evt_CloseWindow().getType()) ||
     !Event_System::getSingleton().addListener(dat, Evt_WindowFocus().getType()) ||
-    !Event_System::getSingleton().addListener(dat, Evt_Keyboard().getType()) ||
-    !Event_System::getSingleton().addListener(dat, Evt_Menu().getType()))
+    !Event_System::getSingleton().addListener(dat, Evt_Menu().getType()) ||
+    !Event_System::getSingleton().addListener(dat, Evt_Move().getType()))
     {
         std::cerr << "DataController could not be added to event_system";
     }
@@ -62,6 +60,7 @@ int main(int argc, char *argv[])
     while(!app->shutdown())
     {
         clock_t begTick = clock();
+        Event_System::getSingleton().queueEvent(EventPtr(new Evt_Move(3,0,"Fighter1")));
         proc.tick();
         Event_System::getSingleton().tick(infMill);
         clock_t difTick = clock() - begTick;

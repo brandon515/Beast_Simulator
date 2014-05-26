@@ -44,7 +44,7 @@ DataPacket::DataPacket(Json::Value obj)
     }
     if(!obj.isMember("objFile"))
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object with the name " + name + " has no filename field")));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Packet","Json object with the name " + name + " has no filename field")));
         constData = obj;
     }
     else
@@ -54,12 +54,12 @@ DataPacket::DataPacket(Json::Value obj)
     }
     if(!obj.isMember("data"))
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object with the name: " + name + " has no mutData values")));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Packet","Json object with the name: " + name + " has no mutData values")));
     }
     Json::Value valuesArr = obj["data"];
     if(constData.isNull() || !constData.isMember("data"))
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Json object with the name: " + name + " has no mutData variables")));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Packet","Json object with the name: " + name + " has no mutData variables")));
         mutData = Json::Value();
     }
     else
@@ -77,6 +77,7 @@ std::string DataPacket::getName()
     return name;
 }
 
+//if not valid input return INT_MAX
 int DataPacket::getInt(std::string name)
 {
     int ret;
@@ -91,6 +92,7 @@ int DataPacket::getInt(std::string name)
     return ret;
 }
 
+//if not valid input return -1
 int DataPacket::getBool(std::string name)
 {
     int ret;
@@ -107,6 +109,7 @@ int DataPacket::getBool(std::string name)
     return ret;
 }
 
+//if not valid input return "noObject"
 std::string DataPacket::getString(std::string name)
 {
     std::string ret;
@@ -121,6 +124,7 @@ std::string DataPacket::getString(std::string name)
     return ret;
 }
 
+//if not valid input return INFINITY
 double DataPacket::getDouble(std::string name)
 {
     double ret;
@@ -143,7 +147,7 @@ Json::Value DataPacket::getRoot(std::string filename)
     file.open(filename.c_str());
     if(!file.is_open())
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("file " + filename + " cannot be opened for Json parsing")));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Packet","file " + filename + " cannot be opened for Json parsing")));
         return Json::Value();
     }
     file.seekg(0, file.end);
@@ -155,7 +159,7 @@ Json::Value DataPacket::getRoot(std::string filename)
     file.close();
     if(!reader.parse(fileStr, root))
     {
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("JSON parser cannot parse the file: " + filename + "\n\treason:" + reader.getFormatedErrorMessages())));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Packet","JSON parser cannot parse the file: " + filename + "\n\treason:" + reader.getFormatedErrorMessages())));
         return Json::Value();
     }
     return root;

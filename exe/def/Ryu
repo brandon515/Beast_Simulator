@@ -1,7 +1,7 @@
 {
-    "type" : ["renderable"],
+    "type" : ["renderable", "movable"],
     "animated" : true,
-    "states" : [ "idle" ],
+    "states" : [ "idle", "walkLeft" ],
     "idle" : {  "image" : "images/Ryu/RyuIdle.png",
                 "screenWidth" : 100,
                 "screenHeight" : 171,
@@ -9,5 +9,12 @@
                 "frameHeight" : 82,
                 "frames" : 4,
                 "fps" : 15},
+    "walkLeft" : {  "image" : "images/Ryu/RyuWalkLeft.png",
+                    "screenWidth" : 100,
+                    "screenHeight" : 171,
+                    "frameWidth" : 48,
+                    "frameHeight" : 81,
+                    "frames" : 5,
+                    "fps" : 15},
     "data" : ["x", "y", "startingState", "direction"]
 }

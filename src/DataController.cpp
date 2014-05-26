@@ -22,16 +22,6 @@ bool DataController::handleEvent(Event const & event)
         currentFocusID = id;
         return true;
     }
-/*    else if(event.getType() == Evt_Keyboard().getType())
-    {
-        Evt_KeyboardData *dat = event.getDataPtr<Evt_KeyboardData>();
-        if(dat->key == VirtualKeyboard::getSingleton().getKeyInt("exit") && !dat->keyDown)
-        {
-            model->removeView(currentFocusID);
-            return true;
-        }
-        return false;
-    }*/
     else if(event.getType() == Evt_Menu().getType())
     {
         Evt_MenuData *dat = event.getDataPtr<Evt_MenuData>();
@@ -45,23 +35,30 @@ bool DataController::handleEvent(Event const & event)
         }
         return true;
     }
-/*    else if(event.getType() == Evt_JoystickButton().getType())
+    else if(event.getType() == Evt_Move().getType())
     {
-        Evt_JoystickButtonData *id = event.getDataPtr<Evt_JoystickButtonData>();
-        if(id->isPressed)
+        Evt_MoveData *dat = event.getDataPtr<Evt_MoveData>();
+        DataPacketPtr obj = model->getObject(dat->ID);
+        if(obj.get() == NULL)
         {
-            if(id->button == 0)
-                std::cout << "ho ho ho\n";
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Controller", "Moving invalid object")));
+            return true;
         }
+        int x = obj->getInt("x");
+        if(x == INT_MAX)
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Controller", "Attempting to move immovable object, perhaps with an unstoppable force?")));
+            return true;
+        }
+        int y = obj->getInt("y");
+        if(y == INT_MAX)
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Controller", "Attempting to move immovable object, perhaps with an unstoppable force?")));
+            return true;
+        }
+        obj->set("x", x+dat->x);
+        obj->set("y", y+dat->y);
         return true;
     }
-    else if(event.getType() == Evt_JoystickAxis().getType())
-    {
-        Evt_JoystickAxisData *dat = event.getDataPtr<Evt_JoystickAxisData>();
-        if(dat->pos > 30000 || dat->pos < -30000)
-        {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Joystick axis: " + boost::lexical_cast<std::string>(dat->axis) + "\nJoystick pos: " + boost::lexical_cast<std::string>(dat->pos))));
-        }
-    }*/
     return false;
 }

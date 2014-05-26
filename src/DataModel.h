@@ -35,6 +35,8 @@ class DataModel : public Process
         void removeView(uint32_t id);
         bool addObject(std::string name, std::string filename, std::string values);
         bool removeObject(std::string name);
+        DataPacketPtr getObject(std::string name);
+        DataPacketPtr getObject(uint32_t id);
         DataConstPtr getDataList();
         static Json::Value getRoot(std::string filename);
     private:

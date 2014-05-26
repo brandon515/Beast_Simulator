@@ -18,7 +18,7 @@ void InputProcess::tick()
             KeyEventMap::iterator event = events.find(it->first);
             if(event == events.end())
             {
-                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Event is not binded to anything")));
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Input Process","Event is not binded to anything")));
             }
             EventParser::parseEvent(event->second);
         }

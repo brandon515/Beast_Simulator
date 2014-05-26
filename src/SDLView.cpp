@@ -23,12 +23,12 @@ Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
         SDL_Surface *sur = IMG_Load(imageStr.c_str());
         if(sur == NULL)
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
         }
         tex = SDL_CreateTextureFromSurface(render, sur);
         if(tex == NULL)
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
         }
         SDL_FreeSurface(sur);
         animated = false;
@@ -54,7 +54,7 @@ Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
             std::string imageStr = block->getString("image");
             if(imageStr.compare("noObject") == 0)
             {
-                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Block " + (*it) + " is not valid")));
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","Block " + (*it) + " is not valid")));
                 continue;
             }
             SDL_Texture *tex = NULL;
@@ -62,14 +62,14 @@ Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
             SDL_SetColorKey(sur, SDL_TRUE, SDL_MapRGB(sur->format, 0xFF, 0x00, 0xFF));
             if(sur == NULL)
             {
-                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","SDL can't load image named " + imageStr + " \n\treason: " + IMG_GetError())));
                 continue;
             }
             tex = SDL_CreateTextureFromSurface(render, sur);
             SDL_FreeSurface(sur);
             if(tex == NULL)
             {
-                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","SDL can't create texture from file named " + imageStr + " \n\treason: " + IMG_GetError())));
                 continue;
             }
             //load animation data
@@ -90,7 +90,7 @@ Texture::Texture(DataPacketPtr data, SDL_Renderer *render)
             TextureRes res = textures.insert(ent);
             if(res.first == textures.end() || res.second == false)
             {
-                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Texture was not able to be added to map")));
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","Texture was not able to be added to map")));
                 continue;
             }
             //if starting state than make it so
@@ -162,7 +162,7 @@ bool SDLView::init()
     if(SDL_Init(SDL_INIT_EVERYTHING)!=0)
     {
         std::string error(SDL_GetError());
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL failed to initilize: " + error)));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","SDL failed to initilize: " + error)));
         return false;
     }
     IMG_Init(IMG_INIT_PNG);
@@ -186,7 +186,7 @@ bool SDLView::init()
     if(window == NULL)
     {
         std::string error(SDL_GetError());
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL window failed to initilize: " + error)));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","SDL window failed to initilize: " + error)));
         return false;
     }
     setID(SDL_GetWindowID(window));
@@ -194,7 +194,7 @@ bool SDLView::init()
     if(renderer == NULL)
     {
         std::string error(SDL_GetError());
-        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL renderer failed to initilize: " + error)));
+        Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","SDL renderer failed to initilize: " + error)));
         return false;
     } 
     return true;
@@ -221,7 +221,7 @@ bool SDLView::add(DataPacketPtr data)
     TextureRes res = textures.insert(ent);
     if(res.first == textures.end() || res.second == false)
     {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Texture " + data->getName() + " couldn't be added into the Map")));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","Texture " + data->getName() + " couldn't be added into the Map")));
             return false;
     }
     return true;

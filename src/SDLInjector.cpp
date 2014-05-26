@@ -24,16 +24,16 @@ bool SDLInjector::init()
         if(stick != NULL)
         {
             std::string name(SDL_JoystickNameForIndex(i));
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Opened Gamepad " + boost::lexical_cast<std::string>(i))));
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Gamepad name: " + name)));
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("# of axes: " + boost::lexical_cast<std::string>(SDL_JoystickNumAxes(stick)))));
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("# of buttons: " + boost::lexical_cast<std::string>(SDL_JoystickNumButtons(stick)))));
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("# of balls: " + boost::lexical_cast<std::string>(SDL_JoystickNumBalls(stick)))));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL Injector","Opened Gamepad " + boost::lexical_cast<std::string>(i))));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL Injector","Gamepad name: " + name)));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL Injector","# of axes: " + boost::lexical_cast<std::string>(SDL_JoystickNumAxes(stick)))));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL Injector","# of buttons: " + boost::lexical_cast<std::string>(SDL_JoystickNumButtons(stick)))));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL Injector","# of balls: " + boost::lexical_cast<std::string>(SDL_JoystickNumBalls(stick)))));
             joysticks.push_back(stick);
         }
         else
         {
-            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Could not open Joystick " + boost::lexical_cast<std::string>(i))));
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL Injector","Could not open Joystick " + boost::lexical_cast<std::string>(i))));
         }
     }
     return true;
