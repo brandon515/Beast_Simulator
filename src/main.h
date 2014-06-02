@@ -26,5 +26,5 @@
 #include "EventParser.h"
 #include "Evt_Move.h"
 #include "InputController.h"
-
-
+#include "MovementView.h"
+#include "MovementController.h"

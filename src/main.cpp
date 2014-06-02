@@ -18,8 +18,7 @@ int main(int argc, char *argv[])
     {
         std::cerr << "Could not load Menu file";
     }
-    SDLViewPtr view(new SDLView());
-    model->addView(view);
+    model->addView(SDLViewPtr(new SDLView()));
     if(!proc.addProcess(model, "DataModel"))
     {
         std::cerr << "DataModel can not be added";
@@ -34,8 +33,7 @@ int main(int argc, char *argv[])
     DataControllerPtr dat(new DataController(model));
     if(!Event_System::getSingleton().addListener(dat, Evt_CloseWindow().getType()) ||
     !Event_System::getSingleton().addListener(dat, Evt_WindowFocus().getType()) ||
-    !Event_System::getSingleton().addListener(dat, Evt_Menu().getType()) ||
-    !Event_System::getSingleton().addListener(dat, Evt_Move().getType()))
+    !Event_System::getSingleton().addListener(dat, Evt_Menu().getType()))
     {
         std::cerr << "DataController could not be added to event_system";
     }
@@ -52,6 +50,15 @@ int main(int argc, char *argv[])
     {
         std::cerr << "Input system not inserted correctly";
     }
+
+    MovementViewPtr mover(new MovementView());
+
+    MovementControllerPtr moveControl(new MovementController(mover));
+    if(!Event_System::getSingleton().addListener(moveControl, Evt_Move().getType()))
+    {
+        std::cerr << "movement system not active";
+    }
+    model->addView(mover);
 
     DataPacketPtr settings(new DataPacket("", "def/settings", ""));
 

@@ -3,6 +3,7 @@
 DataPacket::DataPacket(std::string pName, std::string pFilename, std::string dat)
 {
     name = pName;
+    ID = CRC32(name.c_str(), name.length());
     objFile = pFilename;
     Json::Reader reader;
     Json::Value valuesObj, valuesArr, variablesArr;
@@ -42,6 +43,7 @@ DataPacket::DataPacket(Json::Value obj)
     {
         name = obj["name"].asString();
     }
+    ID = CRC32(name.c_str(), name.length());
     if(!obj.isMember("objFile"))
     {
         Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Packet","Json object with the name " + name + " has no filename field")));
@@ -75,6 +77,11 @@ DataPacket::DataPacket(Json::Value obj)
 std::string DataPacket::getName()
 {
     return name;
+}
+
+uint32_t DataPacket::getID()
+{
+    return ID;
 }
 
 //if not valid input return INT_MAX

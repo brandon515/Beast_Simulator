@@ -35,7 +35,7 @@ bool DataController::handleEvent(Event const & event)
         }
         return true;
     }
-    else if(event.getType() == Evt_Move().getType())
+    /*else if(event.getType() == Evt_Move().getType())
     {
         Evt_MoveData *dat = event.getDataPtr<Evt_MoveData>();
         DataPacketPtr obj = model->getObject(dat->ID);
@@ -59,6 +59,6 @@ bool DataController::handleEvent(Event const & event)
         obj->set("x", x+dat->x);
         obj->set("y", y+dat->y);
         return true;
-    }
+    }*/
     return false;
 }

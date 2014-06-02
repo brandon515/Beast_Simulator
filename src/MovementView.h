@@ -15,10 +15,12 @@ class MovementView : public View
         void postFrame();
         void remove(std::string name);
         bool init();
+        void addMoveEvent(Evt_Move const & event);
+
     private:
-        typedef std::vector<Evt_Move> MoveList
+        typedef std::vector<Evt_Move> MoveList;
         
-        MoveList moves;
+        MoveList reqMoves, movesToBeExecuted;
 
 };
 

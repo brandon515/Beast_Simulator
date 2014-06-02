@@ -31,9 +31,11 @@ class DataPacket
         std::string getDataStr();
         std::vector<std::string> getStringList(std::string name);
         DataPacketPtr getBlock(std::string name);
+        uint32_t getID();
     private:
         Json::Value getRoot(std::string filename);
         std::string name, objFile;
+        uint32_t ID;
         Json::Value mutData, constData;
 };
 #endif
