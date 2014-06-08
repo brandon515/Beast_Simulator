@@ -29,6 +29,11 @@ bool DataModel::showMenu()
                 if(!(*viewIt)->add(dataIt->second))
                     Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model","error in bringing up the menu")));
             }
+            for(ViewList::iterator it = silentViews.begin(); it != silentViews.end(); it++)
+            {
+                if(!(*it)->add(dataIt->second))
+                    Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model","error in bringing up the menu")));
+            }
         }
         inMenu = true;
         return true;
@@ -49,6 +54,10 @@ bool DataModel::hideMenu()
             for(ViewList::iterator viewIt = views.begin(); viewIt != views.end(); viewIt++)
             {
                 (*viewIt)->remove(dataIt->second->getName());
+            }
+            for(ViewList::iterator it = silentViews.begin(); it != silentViews.end(); it++)
+            {
+                (*it)->remove(dataIt->second->getName());
             }
         }
         inMenu = false;
@@ -126,6 +135,11 @@ bool DataModel::loadFile(std::string filename)
             if(!(*it)->add(ent))
                 Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model","Obj with name " + ent->getName() + " couldn't be added")));
         }
+        for(ViewList::iterator it2 = silentViews.begin(); it2 != silentViews.end(); it2++)
+        {
+            if(!(*it2)->add(ent))
+                Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model","Obj with name " + ent->getName() + " couldn't be added")));
+        }
     }
     return true;
 }
@@ -143,6 +157,11 @@ bool DataModel::addObject(std::string name, std::string filename, std::string va
     for(ViewList::iterator it = views.begin(); it != views.end(); it++)
     {
         if(!(*it)->add(ent))
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model","Obj with name " + ent->getName() + " couldn't be added")));
+    } 
+    for(ViewList::iterator it2 = silentViews.begin(); it2 != silentViews.end(); it2++)
+    {
+        if(!(*it2)->add(ent))
             Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model","Obj with name " + ent->getName() + " couldn't be added")));
     } 
     return true;
@@ -203,6 +222,22 @@ bool DataModel::addView(ViewPtr obj)
     return true;
 }
 
+bool DataModel::addSilentView(ViewPtr obj)
+{
+    if(obj.get() == NULL)
+        return false;
+    obj->init();
+    for(DataMap::iterator it = data->begin(); it != data->end(); it++)
+    {
+        if(!obj->add((*it).second))
+        {
+            Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("Data Model","Obj with name " + (*it).second->getName() + " couldn't be added")));
+        }
+    }
+    silentViews.push_back(obj);
+    return true;
+}
+
 void DataModel::removeView(uint32_t id)
 {
     for(ViewList::iterator it = views.begin(); it != views.end(); it++)
@@ -222,9 +257,21 @@ void DataModel::tick()
         Event_System::getSingleton().trigger(Evt_CloseApplication());
     }
     ViewList::iterator it;
+    for(it = silentViews.begin(); it != silentViews.end(); it++)
+    {
+        (*it)->preFrame();
+    }
     for(it = views.begin(); it != views.end(); it++)
     {
         (*it)->preFrame();
+    }
+    for(it = silentViews.begin(); it != silentViews.end(); it++)
+    {
+        for(DataMap::iterator it2 = data->begin(); it2 != data->end(); it2++)
+        {
+            DataPacketPtr dat = it2->second;
+            (*it)->onFrame(dat);
+        }
     }
     for(it = views.begin(); it != views.end(); it++)
     {
@@ -233,6 +280,10 @@ void DataModel::tick()
             DataPacketPtr dat = it2->second;
             (*it)->onFrame(dat);
         }
+    }
+    for(it = silentViews.begin(); it != silentViews.end(); it++)
+    {
+        (*it)->postFrame();
     }
     for(it = views.begin(); it != views.end(); it++)
     {

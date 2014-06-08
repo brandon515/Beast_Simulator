@@ -33,6 +33,7 @@ class DataModel : public Process
         bool init(){return true;}
         bool addView(ViewPtr obj);
         void removeView(uint32_t id);
+        bool addSilentView(ViewPtr obj);
         bool addObject(std::string name, std::string filename, std::string values);
         bool removeObject(std::string name);
         DataPacketPtr getObject(std::string name);
@@ -44,7 +45,7 @@ class DataModel : public Process
 
         DataMapPtr data;
         DataMapPtr menu;
-        ViewList views;
+        ViewList views, silentViews;
         std::string curContext;
         bool inMenu;
 };

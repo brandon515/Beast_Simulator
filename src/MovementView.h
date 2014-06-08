@@ -4,6 +4,16 @@
 #include "Evt_Move.h"
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <time.h>
+#include <map>
+
+class MoveData
+{
+    public:
+        MoveData();
+        clock_t lastMove;
+        bool movedLastFrame;
+};
 
 class MovementView : public View
 {
@@ -19,9 +29,13 @@ class MovementView : public View
 
     private:
         typedef std::vector<Evt_Move> MoveList;
+
+        typedef std::map<uint32_t, MoveData*> MoveMap;
+        typedef std::pair<uint32_t, MoveData*> MoveEnt;
+        typedef std::pair<MoveMap::iterator, bool> MoveRes;
         
         MoveList reqMoves, movesToBeExecuted;
-
+        MoveMap moveTiming;
 };
 
 typedef boost::shared_ptr<MovementView> MovementViewPtr;

@@ -153,7 +153,6 @@ SDLView::~SDLView()
 {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    Event_System::getSingleton().queueEvent(EventPtr(new MsgEvt("SDL View","SDLView is dead")));
 }
 
 bool SDLView::init()

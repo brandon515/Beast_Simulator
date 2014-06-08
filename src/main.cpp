@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     {
         std::cerr << "movement system not active";
     }
-    model->addView(mover);
+    model->addSilentView(mover);
 
     DataPacketPtr settings(new DataPacket("", "def/settings", ""));
 
